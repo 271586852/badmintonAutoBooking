@@ -20,7 +20,7 @@ def get_login_cookies(username, password, login_url):
     # 返回 session 对象的 cookies
     return session.cookies
 
-p_data = {
+p_data_football = {
     "DHID": "",
     "YYRGH": "2310324009",
     "CYRS": 1,
@@ -35,6 +35,24 @@ p_data = {
     "YYLX": 2.0,
     "YYKS": "2023-12-27 09:00",
     "YYJS": "2023-12-27 10:00",
+    "PC_OR_PHONE": "pc"
+}
+
+p_data_badminton = {
+    "DHID": "",
+    "YYRGH": "2310324009",
+    "CYRS": "",
+    "YYRXM": "顾仁杰",
+    "LXFS": "18218196660",
+    "CGDM": "001",
+    "CDWID": "17f8d1dd7a8446b0aece40f81f87981c",
+    "XMDM": "001",
+    "XQWID": 1,
+    "KYYSJD": "18:00-19:00",
+    "YYRQ": "2023-12-29",
+    "YYLX": 1.0,
+    "YYKS": "2023-12-29 18:00",
+    "YYJS": "2023-12-29 19:00",
     "PC_OR_PHONE": "pc"
 }
 
