@@ -1,6 +1,5 @@
 import requests
 import json
-import requests
 
 def get_login_cookies(username, password, login_url):
     session = requests.Session()
@@ -77,7 +76,6 @@ cookie_str = 'EMAP_LANG=zh; _WEU=fACp0H5UvYIPFkjmWSDYoSYcgRwqsk*tRoZCaCzxOrr059u
 
 cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
 
-print(cookies)
 
 def bookTest():
 
