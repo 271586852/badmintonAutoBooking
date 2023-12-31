@@ -83,6 +83,24 @@ p0_data = {
     "PC_OR_PHONE": "pc"
 }
 
+p_data_badminton = {
+    "DHID": "",
+    "YYRGH": "2310324009",
+    "CYRS": "",
+    "YYRXM": "顾仁杰",
+    "LXFS": "18218196660",
+    "CGDM": "001",
+    "CDWID": "17f8d1dd7a8446b0aece40f81f87981c",
+    "XMDM": "001",
+    "XQWID": 1,
+    "KYYSJD": "18:00-19:00",
+    "YYRQ": "2023-12-29",
+    "YYLX": 1.0,
+    "YYKS": "2023-12-29 18:00",
+    "YYJS": "2023-12-29 19:00",
+    "PC_OR_PHONE": "pc"
+}
+
 getTimeList_data = {
     "XQ": 1,
     "YYRQ": "2023-12-29",
@@ -103,8 +121,11 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer }
 
 cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
 
+<<<<<<< HEAD
 # ------------------------------
 
+=======
+>>>>>>> main
 
 def bookTest():
 
