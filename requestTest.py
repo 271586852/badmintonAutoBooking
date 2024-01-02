@@ -9,17 +9,15 @@ import random
 # 必须设置的参数如下
 # 1 cookies参数
 # 2 订场时间 例子："19:00-20:00"
-# 3 订场日期 例子："2024-01-01"
+# 3 订场日期 例子："2024-01-03"
 
-# 设置订场数据
-
-cookie_str = 'EMAP_LANG=zh; _WEU=aHGsEg8MSe8YuJ1LNBJWrHgPUf7AP1LHJB8f9b0ukr3AKw7hakncOJXXP2efBx10Z1df69B75hY3xlKTQkKwVlNdGasxl9bS88izsAgQlNXDAkv5oOE3x9GuhtvnwoHE6kVKuSCCSTz8pRYTpnSTPw9_6PgtrWl0JHYkqmmgDJqYvo3cD*EZuo..; amp.locale=undefined; JSESSIONID=UHNid30IqXoA2tjXS8lI-TRNeMAtyb7Tv7oBEB8ZkuFBajcMyPEe!1678420362; asessionid=7b7db49b-6b4a-435a-9917-a565aba08c43; route=cb53dd1ffa5940bf740b34afe353a0ed; MOD_AUTH_CAS=MOD_AUTH_ST-1164744-DiH1iflt9zLjFeMChO2q1704024345817-4aun-cas'
+cookie_str = 'EMAP_LANG=zh; _WEU=1DEhx1gvqrFGxwQFT47gFnCMtJHPkk0GzWONm_KvBUNZ8xGQw_Q_hwdy4iLnfTR47qK_moJ7O1XUAZqc910mlVf6jhJN9u9p3YmYnEHY_G07Jem5kbmwIFCa7e4l5_Jx9zLLPVsifdv3pEY8iiLYh6wVpTn*06IO0M*WtIVOJK1nrEHTbMBjbgeRHRq2xdj0; route=4c37e2ddc40281383dbb747bc4412a28; MOD_AUTH_CAS=MOD_AUTH_ST-1197008-EBCKKB0gfkjUapNJLVUR1704186837060-4aun-cas'
 book_time = "19:00-20:00"
-book_day = "2024-01-01"
-run_time = "16:30:00"
+book_day = "2024-01-03"
+run_time = "12:30:01"
 
-
-
+username = "2310324009"
+password = "11185272"
 
 testBadminton_data = {
     "DHID": "",
@@ -39,16 +37,13 @@ testBadminton_data = {
     "PC_OR_PHONE": "pc"
 }
 
+cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
 
-cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
+# cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
 start_time = book_day + " " + book_time.split("-")[0]
 end_time = book_day + " " + book_time.split("-")[1]
 book_timeKS = book_time.split("-")[0]
 book_timeJS = book_time.split("-")[1]
-
-
-
-
 
 
 p_data = {
@@ -162,9 +157,9 @@ def getGetOpeningRoom():
             
             if available_rooms:
                 print(available_rooms)
-                # bookTest(available_rooms)
+                bookTest(available_rooms)
             else:
-                for _ in range(10):
+                for _ in range(15):
                     time.sleep(0.3)
                     getGetOpeningRoom()
         
@@ -182,10 +177,18 @@ def getTimeList():
         re.raise_for_status()
         try:
             re_data = json.loads(re.text)
-            print('日期为：',book_day,'时间为',book_time,'的场地信息：')
-
+            print('日期为：', book_day, '时间为', book_time, '的场地信息：')
+            booked_times = []  # Store the fully booked times
             for item in re_data:
                 print(item)
+                if item['text'] == '已满员':
+                    booked_times.append(item['NAME'])
+            print('\n',booked_times)
+            
+            for time_range in booked_times:
+                timeListStart_time,  timeListend_time = time_range.split('-')
+                print(timeListStart_time)
+                # print(timeListend_time)
             
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
@@ -204,10 +207,13 @@ def get_login_cookies(username, password, login_url):
         'password': password,
     }
 
+
     # 发送 POST 请求到登录 URL，带上登录表单的数据
     response = session.post(login_url, data=login_data)
 
     response.raise_for_status()
+
+    print(response.text,response.content,session.cookies)
 
     return session.cookies
 
@@ -236,8 +242,14 @@ def runScriptTime(start_time):
 if __name__ == "__main__":
 
     print(book_time, book_day, start_time, end_time,run_time,'\n')
+    print(cookies,'\n')
 
+    # login_url = 'https://authserver.szu.edu.cn/authserver/login?service=https://ehall.szu.edu.cn:443/qljfwapp/sys/lwSzuCgyy/index.do%23%2FsportVenue'
+    # print(username, password, login_url,'\n')
+
+
+    # get_login_cookies(username, password, login_url)
     # runScriptTime(run_time)
     # bookTest()
-    # getTimeList()
-    getGetOpeningRoom()
+    getTimeList()
+    # getGetOpeningRoom()
