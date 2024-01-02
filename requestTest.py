@@ -5,19 +5,20 @@ import time
 from pprint import pprint
 import random
 
-
+# 设置下列四个参数,然后运行脚本即可
 # 必须设置的参数如下
 # 1 cookies参数
 # 2 订场时间 例子："19:00-20:00"
 # 3 订场日期 例子："2024-01-03"
+# 4 运行时间 例子："12:30:01"
 
+# cookie_str从浏览器中获取
 cookie_str = 'EMAP_LANG=zh; _WEU=1DEhx1gvqrFGxwQFT47gFnCMtJHPkk0GzWONm_KvBUNZ8xGQw_Q_hwdy4iLnfTR47qK_moJ7O1XUAZqc910mlVf6jhJN9u9p3YmYnEHY_G07Jem5kbmwIFCa7e4l5_Jx9zLLPVsifdv3pEY8iiLYh6wVpTn*06IO0M*WtIVOJK1nrEHTbMBjbgeRHRq2xdj0; route=4c37e2ddc40281383dbb747bc4412a28; MOD_AUTH_CAS=MOD_AUTH_ST-1197008-EBCKKB0gfkjUapNJLVUR1704186837060-4aun-cas'
 book_time = "19:00-20:00"
 book_day = "2024-01-03"
 run_time = "12:30:01"
 
-username = "2310324009"
-password = "11185272"
+
 
 testBadminton_data = {
     "DHID": "",
@@ -46,23 +47,6 @@ book_timeKS = book_time.split("-")[0]
 book_timeJS = book_time.split("-")[1]
 
 
-p_data = {
-    "DHID": "",
-    "YYRGH": "2310324009",
-    "CYRS": 1,
-    "YYRXM": "顾仁杰",
-    "LXFS": "18218196660",
-    "CGDM": "007",
-    "CDWID": "9a286792d4e24186a3663727906b5f27",
-    "XMDM": "002",
-    "XQWID": 1,
-    "KYYSJD": "18:00-19:00",
-    "YYRQ": "2023-12-30",
-    "YYLX": 2.0,
-    "YYKS": "2023-12-30 18:00",
-    "YYJS": "2023-12-30 19:00",
-    "PC_OR_PHONE": "pc"
-}
 
 getTimeList_data = {
     "XQ": 1,
@@ -98,7 +82,7 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer }
 # ------------------------------
 
 
-def bookTest(availableRoom):
+def bookRoom(availableRoom):
     if "7981ade524bd4b1ab92d3a622fb0d3af" in availableRoom:
         Room = "7981ade524bd4b1ab92d3a622fb0d3af"
     else:
@@ -157,7 +141,7 @@ def getGetOpeningRoom():
             
             if available_rooms:
                 print(available_rooms)
-                bookTest(available_rooms)
+                bookRoom(available_rooms)
             else:
                 for _ in range(15):
                     time.sleep(0.3)
@@ -250,6 +234,6 @@ if __name__ == "__main__":
 
     # get_login_cookies(username, password, login_url)
     # runScriptTime(run_time)
-    # bookTest()
-    getTimeList()
-    # getGetOpeningRoom()
+    # bookRoom()
+    # getTimeList()
+    getGetOpeningRoom()
