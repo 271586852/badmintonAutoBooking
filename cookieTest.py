@@ -14,6 +14,10 @@ headers = {
 }
 
 
+# 访问登录页面并获取可能需要的cookie和隐藏字段
+response = session.get(login_page_url, headers=headers)
+soup = BeautifulSoup(response.text, 'html.parser')
+
 # TODO: 从soup中提取任何必要的隐藏字段，例如CSRF令牌
 # csrf_token = soup.find('input', {'name': 'csrf_token'})['value']
 
@@ -38,3 +42,6 @@ cookies = session.cookies
 print("\nCookies:")
 for cookie in cookies:
     print(f"{cookie.name}: {cookie.value}")
+
+
+
