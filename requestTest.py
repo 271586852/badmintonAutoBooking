@@ -14,10 +14,13 @@ import random
 # 4 运行时间 例子："12:30:01"
 
 # cookie_str从浏览器中获取
-cookie_str = 'EMAP_LANG=zh; _WEU=G4T56F0imUzqlC2FsNSr0CulPFQdnqy4KWJaBdQ0y7MYYl6GleGrEa2PnPvBmz5RvOejxn1teVz1aDrzLgSqMileRV0u2V6VHXnDzC_sncSvyEySwEB6iWBunnhmm0Y0qJ3uHBOm7AsGnBj0D0vqTGeUwOgdw36GyeDkb06LhtA6jO6Sjo723NxK6CwYCqDwkxUwAMCtJmOuWkr2CFgDMo..; route=4c37e2ddc40281383dbb747bc4412a28; MOD_AUTH_CAS=MOD_AUTH_ST-1227851-kqZuPPgvqDh6mQkO5MnI1704286173653-4aun-cas'
-book_time = "21:00-22:00"
-book_day = "2024-01-03"
+cookie_str = 'EMAP_LANG=zh; _WEU=Ixdoi6qoAzxx3v5QQu__WRu7m*7fJJgbwSjz7amuTlNAKR7II3pRnCo9SSeKVnBXEii8R2Pk1xWVhNT4vknqUq8MR_mheh7eB6GUaGQkSzG7GalPdRDZ7EU8EsSXAP2htYqUxCVYlCuZ3ahKv3HehqlMnrkA0FqVCaLqTp8qoMEnad3pLI6go0RQJGpCWAFCxAWkHjOjDg9GbGaw3pjgzo..; route=4c37e2ddc40281383dbb747bc4412a28; MOD_AUTH_CAS=MOD_AUTH_ST-1256648-fb95IsmzhjIKalucfwse1704357032188-4aun-cas'
+book_time = "12:00-13:00"
+book_day = "2024-01-05"
 run_time = "12:30:01"
+
+
+
 
 available_rooms = []  # Store the WID of available rooms
 booked_times = []  # Store the fully booked times
@@ -80,7 +83,7 @@ urlGetTimeList = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/sportVenue/get
 
 urlGetOpeningRoom = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/modules/sportVenue/getOpeningRoom.do'
 
-headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer }
+headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cache-Control': 'no-cache'}
 
 
 # ------------------------------
@@ -144,13 +147,14 @@ def bookRoom(availableRoom):
     
 def getOpeningRoom():
     global available_rooms
+    print('getOpeningRoom',getOpeningRoom_data)
     try:
         re = requests.post(urlGetOpeningRoom, data=getOpeningRoom_data, headers=headers, cookies=cookies)
         re.raise_for_status()
         try:
             re_data = json.loads(re.text)
             print('日期为：', book_day, '时间为', book_time, '的空余场地信息：')
-            # pprint(re_data)
+            # pprint(re_data['datas']['getOpeningRoom']['rows'])
             for item in re_data['datas']['getOpeningRoom']['rows']:
                 if item['text'] == '可预约':
                     available_rooms.append(item['WID'])
@@ -163,12 +167,12 @@ def getOpeningRoom():
             
             if available_rooms:
                 print(available_rooms)
-                bookRoom(available_rooms)
+                # bookRoom(available_rooms)
 
-            else:
-                for _ in range(15):
-                    time.sleep(0.3)
-                    getOpeningRoom()
+            # else:
+            #     for _ in range(15):
+            #         time.sleep(0.3)
+            #         getOpeningRoom()
         
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
@@ -179,33 +183,47 @@ def getOpeningRoom():
         return False
 
 def getTimeList():
-    global book_time, start_time, end_time, booked_times
+    global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS
+    # print('getTimeList',getOpeningRoom_data)
+    # book_time = "19:00-20:00"
+    # book_timeKS = book_time.split("-")[0]
+    # book_timeJS = book_time.split("-")[1]   
+    # getOpeningRoom_data["KSSJ"] = book_timeKS
+    # getOpeningRoom_data["JSSJ"] = book_timeJS
+    # print('getTimeList',getOpeningRoom_data)
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
         re.raise_for_status()
         try:
             re_data = json.loads(re.text)
-            print('日期为：', book_day, '时间为', book_time, '的场地信息：')
+            print('日期为：', book_day,  '的场地信息：')
             for item in re_data:
-                print(item)
+                # print(item)
                 if item['text'] == '可预约':
                     booked_times.append(item['NAME'])
-            print('\n',booked_times)
+            print(book_day,'可预约时间为',booked_times,'\n')
+            
             
 
-            # for time_range in booked_times:
-            #     timeListStart_time,  timeListend_time = time_range.split('-')
-            #     print(timeListStart_time)
-            #     print(timeListend_time)
-
-            # 完善代码，如果booked_times非空，则修改bookBadminton_data中的book_time时间为booked_times中任一元素，start_time为该元素的timeListStart_time,end_time为该元素的timeListend_time，
-            # 然后执行getOpeningRoom()函数
-            
             if booked_times:
-                book_time = booked_times[0]
-                start_time = booked_times[0].split('-')[0]
-                end_time = booked_times[0].split('-')[1]
-                print('book_time修改', book_time, 'start_time修改', start_time, 'end_time修改', end_time)
+                if book_time not in booked_times:
+                    if "19:00-20:00" in booked_times:
+                        book_time = "19:00-20:00"
+                    else:
+                        book_time = booked_times[0]
+
+                book_timeKS = book_time.split("-")[0]
+                book_timeJS = book_time.split("-")[1]    
+                print(book_timeKS,book_timeJS,'\n')
+
+                # book_timeKS修改后，还需要对getOpeningRoom_data中的book_timeKS进行修改
+                getOpeningRoom_data["KSSJ"] = book_timeKS
+                getOpeningRoom_data["JSSJ"] = book_timeJS
+
+                print('修改后的',book_time)
+                start_time = book_time.split('-')[0]
+                end_time = book_time.split('-')[1]
+                print('getTimeList',getOpeningRoom_data)
 
                 getOpeningRoom()
             else:
@@ -266,8 +284,9 @@ def runScriptTime(start_time):
 
 if __name__ == "__main__":
 
-    print(book_time, book_day, start_time, end_time,run_time,'\n')
-    print(cookies,'\n')
+    # print(book_time, book_day, start_time, end_time,run_time,'\n')
+    # print(cookies,'\n')
+    # print(book_timeKS,book_timeJS,'\n')
 
     # login_url = 'https://authserver.szu.edu.cn/authserver/login?service=https://ehall.szu.edu.cn:443/qljfwapp/sys/lwSzuCgyy/index.do%23%2FsportVenue'
     # print(username, password, login_url,'\n')
