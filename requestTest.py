@@ -14,16 +14,18 @@ import random
 # 4 运行时间 例子："12:30:01"
 
 # cookie_str从浏览器中获取
-cookie_str = 'EMAP_LANG=zh; _WEU=Ixdoi6qoAzxx3v5QQu__WRu7m*7fJJgbwSjz7amuTlNAKR7II3pRnCo9SSeKVnBXEii8R2Pk1xWVhNT4vknqUq8MR_mheh7eB6GUaGQkSzG7GalPdRDZ7EU8EsSXAP2htYqUxCVYlCuZ3ahKv3HehqlMnrkA0FqVCaLqTp8qoMEnad3pLI6go0RQJGpCWAFCxAWkHjOjDg9GbGaw3pjgzo..; route=4c37e2ddc40281383dbb747bc4412a28; MOD_AUTH_CAS=MOD_AUTH_ST-1256648-fb95IsmzhjIKalucfwse1704357032188-4aun-cas'
-book_time = "12:00-13:00"
-book_day = "2024-01-05"
-run_time = "12:30:01"
+cookie_str = 'EMAP_LANG=zh; _WEU=YWNiVj3xX7iA1yoErgIhUIGHyDRbp4F1sdvcVrY6TlnGmLN6NIf*IhCP_AlgIVBpyj6iNQ*j6h2fSq*2ZaQfa63AzFiiTcA_r9kDdR7R1QINRflME1p9608T0B43erS1s4QCWAzwQqE7zl2SIncdcCNZptYhFN3CQUWryDg*kVWhLRW9CMhhac..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; openLoginServicePageFlag=false; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19693%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1702003739%7C11%7CMCAAMB-1702003739%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1701406139s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1701398952165%7C1796006952165%3B%20v8_s%3DFirst%2520Visit%7C1701400752165%3B%20c19%3Dsd%253Apdfft%253Apdf%253Aurl%7C1701400752171%3B%20v68%3D1701398951526%7C1701400752186%3B; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-1278868-nBrVzzJrXQFF4hOQCQGM1704429085474-4aun-cas; asessionid=1a2562b7-d135-44b7-b692-694e9626283d; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
+book_time = "19:00-20:00"
+book_day = "2024-01-06"
+run_time = "12:29:45"
 
 
 
 
 available_rooms = []  # Store the WID of available rooms
 booked_times = []  # Store the fully booked times
+getTimeListNumber = 0
+getOpeningRoomNumber = 0
 
 
 
@@ -90,7 +92,7 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cac
 
 
 def bookRoom(availableRoom):
-    print('bookRoom函数',available_rooms)
+    # print('bookRoom函数',available_rooms)
     if "7981ade524bd4b1ab92d3a622fb0d3af" in availableRoom:
         Room = "7981ade524bd4b1ab92d3a622fb0d3af"
     else:
@@ -122,7 +124,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data)
+            print(re_data,'预约成功，时间为',book_day,book_time)
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -139,14 +141,13 @@ def bookRoom(availableRoom):
             if "您已预约" in re.text:
                 print("您已预约")
                 return False
-           
-
+            
     except requests.RequestException as e:
         print(f"请求错误: {e}")
         return False
     
 def getOpeningRoom():
-    global available_rooms
+    global available_rooms,getOpeningRoomNumber
     print('getOpeningRoom',getOpeningRoom_data)
     try:
         re = requests.post(urlGetOpeningRoom, data=getOpeningRoom_data, headers=headers, cookies=cookies)
@@ -167,12 +168,15 @@ def getOpeningRoom():
             
             if available_rooms:
                 print(available_rooms)
-                # bookRoom(available_rooms)
+                bookRoom(available_rooms)
 
-            # else:
-            #     for _ in range(15):
-            #         time.sleep(0.3)
-            #         getOpeningRoom()
+            else:
+                getOpeningRoomNumber += 1
+                if getOpeningRoomNumber < 10:
+                    time.sleep(0.2)
+                    print('调用第',getOpeningRoomNumber,'次',book_day,"没有空场了")
+                    getOpeningRoom()
+                return False
         
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
@@ -183,7 +187,7 @@ def getOpeningRoom():
         return False
 
 def getTimeList():
-    global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS
+    global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber
     # print('getTimeList',getOpeningRoom_data)
     # book_time = "19:00-20:00"
     # book_timeKS = book_time.split("-")[0]
@@ -209,11 +213,19 @@ def getTimeList():
                 if book_time not in booked_times:
                     if "19:00-20:00" in booked_times:
                         book_time = "19:00-20:00"
+                    elif "20:00-21:00" in booked_times:
+                        book_time = "20:00-21:00"
+                    elif "18:00-19:00" in booked_times:
+                        book_time = "18:00-19:00"
+                    elif "17:00-18:00" in booked_times:
+                        book_time = "17:00-18:00"
+                    elif "21:00-22:00" in booked_times:
+                        book_time = "21:00-22:00"
                     else:
-                        book_time = booked_times[0]
+                        book_time = random.choice(booked_times)
 
                 book_timeKS = book_time.split("-")[0]
-                book_timeJS = book_time.split("-")[1]    
+                book_timeJS = book_time.split("-")[1]
                 print(book_timeKS,book_timeJS,'\n')
 
                 # book_timeKS修改后，还需要对getOpeningRoom_data中的book_timeKS进行修改
@@ -226,8 +238,13 @@ def getTimeList():
                 print('getTimeList',getOpeningRoom_data)
 
                 getOpeningRoom()
+                
             else:
-                print(book_day,"没有空场了")
+                getTimeListNumber += 1
+                if getTimeListNumber < 10:
+                    time.sleep(0.2)
+                    print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
+                    getTimeList()
                 return False
                 
 
@@ -293,7 +310,7 @@ if __name__ == "__main__":
 
 
     # get_login_cookies(username, password, login_url)
-    # runScriptTime(run_time)
+    runScriptTime(run_time)
     # bookRoom("7981ade524bd4b1ab92d3a622fb0d3af")
     getTimeList()
     # getOpeningRoom()
