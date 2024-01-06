@@ -16,10 +16,11 @@ from datetime import datetime
 # 4 运行时间 例子："13:30:01"
 
 # cookie_str从浏览器中获取
-cookie_str = 'EMAP_LANG=zh; _WEU=YWNiVj3xX7iA1yoErgIhUIGHyDRbp4F1sdvcVrY6TlnGmLN6NIf*IhCP_AlgIVBpyj6iNQ*j6h2fSq*2ZaQfa63AzFiiTcA_r9kDdR7R1QINRflME1p9608T0B43erS1s4QCWAzwQqE7zl2SIncdcCNZptYhFN3CQUWryDg*kVWhLRW9CMhhac..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; openLoginServicePageFlag=false; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19693%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1702003739%7C11%7CMCAAMB-1702003739%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1701406139s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1701398952165%7C1796006952165%3B%20v8_s%3DFirst%2520Visit%7C1701400752165%3B%20c19%3Dsd%253Apdfft%253Apdf%253Aurl%7C1701400752171%3B%20v68%3D1701398951526%7C1701400752186%3B; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-1278868-nBrVzzJrXQFF4hOQCQGM1704429085474-4aun-cas; asessionid=1a2562b7-d135-44b7-b692-694e9626283d; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
+cookie_str = 'EMAP_LANG=zh; _WEU=ibzf2MtHmmhaJTpDjfPFYChvK1oauOQu4R5PL4uStpNA4BhNwRZcFxAE*Zsm7FYb5adbIIdL_TEZjsuml5scobq**SWlx9gfxcnC423NpXG1iXQTb*KH9W_Gaw6BdjXR0GmTDWdl6J9QSg_JrvHnN68vfDiAjOQgpg6aNgtF210yLBjMNN5Q5mawCPRcUAa1w4j8kH8P4OgYkGOJ9Uctkj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; openLoginServicePageFlag=false; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19693%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1702003739%7C11%7CMCAAMB-1702003739%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1701406139s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1701398952165%7C1796006952165%3B%20v8_s%3DFirst%2520Visit%7C1701400752165%3B%20c19%3Dsd%253Apdfft%253Apdf%253Aurl%7C1701400752171%3B%20v68%3D1701398951526%7C1701400752186%3B; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-1309265-mkpTaIR6afA6HZ7AbhSW1704513091050-eCjG-cas; route=6fcc95effda7818ac250c10acfaab6fc'
 book_time = "19:00-20:00"
-book_day = "2024-01-06"
-run_time = "13:33:45"
+book_day = "2024-01-07"
+run_time = "15:29:00"
+
 
 
 
@@ -126,7 +127,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data,'预约成功，时间为',book_day,book_time)
+            print(re_data,'预约成功，时间为',book_day,book_time,datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -150,7 +151,7 @@ def bookRoom(availableRoom):
     
 def getOpeningRoom():
     global available_rooms,getOpeningRoomNumber
-    print('getOpeningRoom',getOpeningRoom_data)
+    # print('getOpeningRoom',getOpeningRoom_data)
     try:
         re = requests.post(urlGetOpeningRoom, data=getOpeningRoom_data, headers=headers, cookies=cookies)
         re.raise_for_status()
@@ -237,7 +238,7 @@ def getTimeList():
                 print('修改后的',book_time)
                 start_time = book_time.split('-')[0]
                 end_time = book_time.split('-')[1]
-                print('getTimeList',getOpeningRoom_data)
+                # print('getTimeList',getOpeningRoom_data)
 
                 getOpeningRoom()
                 
@@ -281,11 +282,16 @@ def get_login_cookies(username, password, login_url):
 
 # 特定时间运行
 def runScriptTime(start_time):
-    tz = pytz.timezone('Asia/Shanghai')
-    current_time = datetime.now(tz).strftime("%H:%M:%S")
+
+    # 获取当前的北京时间
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
+
+    # 打印北京时间
+    print(current_time)
     
     if current_time >= start_time:
-        print("已经过了指定的开始时间。")
+        print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
         return
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
@@ -299,7 +305,7 @@ def runScriptTime(start_time):
         time.sleep(1)
         remaining_seconds -= 1
     
-    print("开始运行程序！")
+    print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
 
 
