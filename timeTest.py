@@ -1,13 +1,7 @@
-import datetime
-import requests
-import json
-import time
-from pprint import pprint
-import random
 import pytz
 from datetime import datetime
 
-
+# 用于测试当前时间是否准确
 # 获取当前的北京时间
 beijing_tz = pytz.timezone('Asia/Shanghai')
 current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
