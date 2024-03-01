@@ -15,11 +15,11 @@ from datetime import datetime
 # 3 订场日期 例子："2024-01-03"
 # 4 运行时间 例子："13:30:01"
 
-# cookie_str从浏览器中获取
-cookie_str = 'EMAP_LANG=zh; _WEU=ibzf2MtHmmhaJTpDjfPFYChvK1oauOQu4R5PL4uStpNA4BhNwRZcFxAE*Zsm7FYb5adbIIdL_TEZjsuml5scobq**SWlx9gfxcnC423NpXG1iXQTb*KH9W_Gaw6BdjXR0GmTDWdl6J9QSg_JrvHnN68vfDiAjOQgpg6aNgtF210yLBjMNN5Q5mawCPRcUAa1w4j8kH8P4OgYkGOJ9Uctkj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; openLoginServicePageFlag=false; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19693%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1702003739%7C11%7CMCAAMB-1702003739%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1701406139s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1701398952165%7C1796006952165%3B%20v8_s%3DFirst%2520Visit%7C1701400752165%3B%20c19%3Dsd%253Apdfft%253Apdf%253Aurl%7C1701400752171%3B%20v68%3D1701398951526%7C1701400752186%3B; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-1309265-mkpTaIR6afA6HZ7AbhSW1704513091050-eCjG-cas; route=6fcc95effda7818ac250c10acfaab6fc'
+# cookie_str自行从浏览器中获取
+cookie_str = 'EMAP_LANG=zh; _WEU=nTWVyiCT6rVIDHbVbGGP5gKcH0LrN8r95E2M7kLeElZlWq5ZiNAgreN6hOaSTaTcMZJJ1I_Wi*LnE2gqAWLAMUfjqrOjcua9h_4pUpsRmBzcYUL48zKzmYYtujkwRijjRYCo6eVOBM9Udqm4bpRtQ**S7BevHCfxbfeuJbzDJr*q5C8uJsakuJD3_anUGJRj51etowd6h1L.; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; MOD_AUTH_CAS=MOD_AUTH_ST-27232-fNRR9IxlehNc45BXI1VY1709264899185-fvKD-cas; asessionid=350365b6-fcfe-413e-a918-397307545cf3; amp.locale=undefined; JSESSIONID=faT4ILixV9bIheaMVZBI6LRQZ27hhn496fOLjT-7NYIQmzNEYEBD!-1803975086; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
 book_time = "19:00-20:00"
-book_day = "2024-01-07"
-run_time = "15:29:00"
+book_day = "2024-03-02"
+run_time = "12:30:00"
 
 
 
@@ -308,6 +308,11 @@ def runScriptTime(start_time):
     print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
 
+def startRun():
+    getTimeList()
+    print('运行完毕')
+
+    
 
 if __name__ == "__main__":
 
@@ -315,12 +320,15 @@ if __name__ == "__main__":
     # print(cookies,'\n')
     # print(book_timeKS,book_timeJS,'\n')
 
-    # login_url = 'https://authserver.szu.edu.cn/authserver/login?service=https://ehall.szu.edu.cn:443/qljfwapp/sys/lwSzuCgyy/index.do%23%2FsportVenue'
-    # print(username, password, login_url,'\n')
-
-
+    # 自动获取用户cookie，日后完善
     # get_login_cookies(username, password, login_url)
+
+    # 设定运行时间
     runScriptTime(run_time)
+    # 入口函数
+    startRun()
+
+    # 下列代码，用于测试，一般情况下注释下面的代码
     # bookRoom("7981ade524bd4b1ab92d3a622fb0d3af")
-    getTimeList()
+    # getTimeList()
     # getOpeningRoom()
