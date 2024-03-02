@@ -8,47 +8,33 @@ import pytz
 from datetime import datetime
 
 
-# 设置下列四个参数,然后运行脚本即可
+# 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
-# 1 cookies参数
+# 1 cookies参数 cookie_str自行从浏览器中获取 
 # 2 订场时间 例子："19:00-20:00"
 # 3 订场日期 例子："2024-01-03"
 # 4 运行时间 例子："13:30:01"
+# 5 学号
+# 6 姓名
+# 7 手机号
 
-# cookie_str自行从浏览器中获取
-cookie_str = 'EMAP_LANG=zh; _WEU=nTWVyiCT6rVIDHbVbGGP5gKcH0LrN8r95E2M7kLeElZlWq5ZiNAgreN6hOaSTaTcMZJJ1I_Wi*LnE2gqAWLAMUfjqrOjcua9h_4pUpsRmBzcYUL48zKzmYYtujkwRijjRYCo6eVOBM9Udqm4bpRtQ**S7BevHCfxbfeuJbzDJr*q5C8uJsakuJD3_anUGJRj51etowd6h1L.; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; MOD_AUTH_CAS=MOD_AUTH_ST-27232-fNRR9IxlehNc45BXI1VY1709264899185-fvKD-cas; asessionid=350365b6-fcfe-413e-a918-397307545cf3; amp.locale=undefined; JSESSIONID=faT4ILixV9bIheaMVZBI6LRQZ27hhn496fOLjT-7NYIQmzNEYEBD!-1803975086; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
+cookie_str = 'EMAP_LANG=zh; _WEU=6goq9eSpKM5xrCyfiQ2wdxbbp5bKdvdzr4FN5sizA0785vifAvSV1n70jVSTdceysZageBL7AbIOtXytoA0VHktqlhgwei6VRo9Vd0ik*zUjiotbqgoILOguFGla6aNHBI_WiF6m1GGrB72Wu8y00ns2lBUUBYAA8bR9nmudPb23WOHmSH14D5Hwdez0MrW*UrDBQ9eGyVc.; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-244680-Mahb1YQc0rC7SDj4ygaY1709352698397-n3kw-cas; route=07389b9fd090f647166fb5e572add976'
 book_time = "19:00-20:00"
-book_day = "2024-03-02"
+book_day = "2024-03-03"
 run_time = "12:30:00"
+YYRGH = "2310324009"
+YYRXM = "顾仁杰"
+LXFS = "18218196660"
 
 
 
-
-
+# -----------------------下面参数勿修改-----------------------
 available_rooms = []  # Store the WID of available rooms
 booked_times = []  # Store the fully booked times
 getTimeListNumber = 0
 getOpeningRoomNumber = 0
 
 
-
-testBadminton_data = {
-    "DHID": "",
-    "YYRGH": "2310324009",
-    "CYRS": '',
-    "YYRXM": "顾仁杰",
-    "LXFS": "18218196660",
-    "CGDM": "001",
-    "CDWID": "7981ade524bd4b1ab92d3a622fb0d3af",
-    "XMDM": "001",
-    "XQWID": 1,
-    "KYYSJD": "18:00-19:00",
-    "YYRQ": "2024-01-01",
-    "YYLX": 1.0,
-    "YYKS": "2024-01-01 18:00",
-    "YYJS": "2024-01-01 19:00",
-    "PC_OR_PHONE": "pc"
-}
 
 cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
 
@@ -106,10 +92,10 @@ def bookRoom(availableRoom):
     # print("移除后的",availableRoom)
     bookBadminton_data = {
         "DHID": "",
-        "YYRGH": "2310324009",
+        "YYRGH": YYRGH,
         "CYRS": '',
-        "YYRXM": "顾仁杰",
-        "LXFS": "18218196660",
+        "YYRXM": YYRXM,
+        "LXFS": LXFS,
         "CGDM": "001",
         "CDWID": Room,
         "XMDM": "001",
