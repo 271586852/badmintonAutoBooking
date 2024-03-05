@@ -10,7 +10,7 @@ from datetime import datetime
 
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
-# 1 cookies参数 cookie_str自行从浏览器中获取 
+# 1 cookies参数 ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败--------------
 # 2 订场时间 例子："19:00-20:00"
 # 3 订场日期 例子："2024-01-03"
 # 4 运行时间 例子："13:30:01"
@@ -18,10 +18,12 @@ from datetime import datetime
 # 6 姓名
 # 7 手机号
 
-cookie_str = 'EMAP_LANG=zh; _WEU=zmSAiRDsx772DQiL4IWN540Zkg0zTvbueexVMAjYOKu*P03ZsacwwCEXXyu6WgcQ6ws*eAtPzlNolQ8tL68X1H4NCuzTSyV4Deo3iOV9LgDuLWdBcVYvUylJ11FM2*yZbq5Tbv4GdZtoUQoKYcWuqMCBHL4OP8FqvNYB2hTlTaUZYEvahb5BRxD0bFvz8lwVSyRO4g269jGW2e9Pbn878S..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-257972-RutmufWUp6lGSf0VJ1zC1709433102001-n3kw-cas; asessionid=8fcaa73d-8de8-48a6-b300-7ec2cea60917; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
+# 14：45
+cookie_str ='EMAP_LANG=zh; _WEU=*xZYG55xkdywY06ZZ878MqD6nThaTSBS1EBDh9aGJr9sSb_9bBHCdUGhJOD1EqEOHFHgilZNybiqbiEQCnZzLqzEOz3P1mUGGfejFdt1x6cl8GPLF*cM6vQRA5vZkVzU4Fz09EoT2FLTNQVuXKi2GvTkl*LshiWvHbHa1m1dMMfLNDEVPYqmjEYwytm_vsO8; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-145500-IWnggURdsB7JVIMmx0uQ1709621105313-fvKD-cas; route=c74f3c8250d849c2cfd6230ee3f779bd'
+# cookie_str = 'EMAP_LANG=zh; _WEU=MkijGTesq4L966Q**U3omvpz6x5AzwY3gzf*LcfeUMEaKRivEAI2_wEtXGaI*ZoyhPzNyxJKeLsMYqHYQqdGstvulPXsvLV3hUc8lhbETRV8FNh2BPb58s59wHKfNMl3JoQvdOddIgj5gIEAnWCjYx11ukJdCNsEae2j6liIFIxrwn_Vomf9UegMeaybUT9a; asessionid=13b3af03-4632-4101-b513-b9326e94bab5; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
 book_time = "19:00-20:00"
-book_day = "2024-03-03"
-run_time = "12:29:00"
+book_day = "2024-03-06"
+run_time = "12:29:57"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
 LXFS = "18218196660"
@@ -309,8 +311,8 @@ if __name__ == "__main__":
     # 自动获取用户cookie，日后完善
     # get_login_cookies(username, password, login_url)
 
-    # 设定运行时间
-    # runScriptTime(run_time)
+    # 设定运行时间，测试时可注释掉，可即刻运行
+    runScriptTime(run_time)
     # 入口函数
     startRun()
 
