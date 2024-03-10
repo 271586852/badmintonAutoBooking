@@ -84,8 +84,15 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cac
 
 def bookRoom(availableRoom):
     # print('bookRoom函数',available_rooms)
-    if "7981ade524bd4b1ab92d3a622fb0d3af" in availableRoom:
-        Room = "7981ade524bd4b1ab92d3a622fb0d3af"
+    if "15093a7663fa498695608f3d52cca59d" in availableRoom:
+        Room = "15093a7663fa498695608f3d52cca59d"
+    elif "5bf45a019b8d40aaafbda985beb63dde" in availableRoom:
+        Room = "5bf45a019b8d40aaafbda985beb63dde"
+    elif "8c3d2aa5b7bf4067922153764c24934b" in availableRoom:
+        Room = "8c3d2aa5b7bf4067922153764c24934b"
+    elif "128957e632104f57b3fe9bb9fe0a7770" in availableRoom:
+        Room = "128957e632104f57b3fe9bb9fe0a7770" 
+    
     else:
         Room = random.choice(availableRoom)
         print('Room为', Room)
@@ -120,7 +127,7 @@ def bookRoom(availableRoom):
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
                 print("您来迟了")
-                availableRoom.remove(Room)  
+                availableRoom.remove(Room)
                 print("移除后的",availableRoom)
                 if availableRoom:
                     bookRoom(availableRoom)  

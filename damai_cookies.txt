@@ -1,0 +1,10 @@
+
+[{"domain": "ehall.szu.edu.cn", "httpOnly": false, "name": "asessionid", "path": "/", "sameSite": "Lax", "secure": false, "value": "1548e937-43be-41f5-920f-95704adee471"},
+
+ {"domain": "ehall.szu.edu.cn", "httpOnly": true, "name": "MOD_AUTH_CAS", "path": "/", "sameSite": "Lax", "secure": false, "value": "MOD_AUTH_ST-462572-wRB7k4eCI6ncVZuk6Bb91710041136651-jQ2n-cas"},
+ 
+ {"domain": "ehall.szu.edu.cn", "httpOnly": false, "name": "_WEU", "path": "/qljfwapp/", "sameSite": "Lax", "secure": true, "value": "AtYCAWCm6XHUXo8_9ewHwzcPvLYVXCbrwFU6BKDmMxmxlk42MW_e*vLL58ExvxNa1ojrp*9s6ZLFxS4Cdt6Rhf*3d*0tA*mO1UI*DHwPFpE7F3hzwA3PnfuLNqbjbYgMaebdDGl2RRCfnmUazRVGFhOEZu4QoxCf3rZM8Cin_De1P2sIuEnrfHqX8CuolNxLF_iV4Lzv2VU."}, 
+
+ {"domain": "ehall.szu.edu.cn", "httpOnly": false, "name": "route", "path": "/", "sameSite": "Lax", "secure": false, "value": "f9bb7d1dbb51bc04862ec2b9cddaff48"}, 
+
+{"domain": "ehall.szu.edu.cn", "httpOnly": false, "name": "EMAP_LANG", "path": "/qljfwapp/", "sameSite": "Lax", "secure": false, "value": "zh"}]
