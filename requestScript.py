@@ -35,7 +35,7 @@ available_rooms = []  # Store the WID of available rooms
 booked_times = []  # Store the fully booked times
 getTimeListNumber = 0
 getOpeningRoomNumber = 0
-
+bookRoomNumber = 0
 
 
 cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
@@ -83,6 +83,7 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cac
 
 
 def bookRoom(availableRoom):
+    global bookRoomNumber
     # print('bookRoom函数',available_rooms)
     if "15093a7663fa498695608f3d52cca59d" in availableRoom:
         Room = "15093a7663fa498695608f3d52cca59d"
@@ -130,7 +131,7 @@ def bookRoom(availableRoom):
                 availableRoom.remove(Room)
                 print("移除后的",availableRoom)
                 if availableRoom:
-                    bookRoom(availableRoom)  
+                    bookRoom(availableRoom)
                 else:
                     print(book_day,book_time,"这个时间段已经没空场了")
                     getTimeList()
@@ -142,6 +143,9 @@ def bookRoom(availableRoom):
             
     except requests.RequestException as e:
         print(f"请求错误: {e}")
+        bookRoomNumber +1
+        if available_rooms and bookRoomNumber<5:
+            bookRoom(available_rooms)
         return False
     
 def getOpeningRoom():

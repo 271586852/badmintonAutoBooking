@@ -95,13 +95,16 @@ getTimeList_data = {
 
 loginCookie = {
     "domain": "ehall.szu.edu.cn",
-    "httpOnly": "False",
+    "httpOnly": False,
     "name": "_WEU",
     "path": "/qljfwapp/",
     "sameSite": "Lax",
-    "secure": "True",
+    "secure": True,
     "value": "AtYCAWCm6XHUXo8_9ewHwzcPvLYVXCbrwFU6BKDmMxmxlk42MW_e*vLL58ExvxNa1ojrp*9s6ZLFxS4Cdt6Rhf*3d*0tA*mO1UI*DHwPFpE7F3hzwA3PnfuLNqbjbYgMaebdDGl2RRCfnmUazRVGFhOEZu4QoxCf3rZM8Cin_De1P2sIuEnrfHqX8CuolNxLF_iV4Lzv2VU."
 }
+
+
+
 
 re = requests.post(url, data=getTimeList_data, headers=headers,cookies=loginCookie)
 re.raise_for_status()
