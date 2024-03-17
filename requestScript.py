@@ -42,6 +42,7 @@ bookRoomNumber = 0
 
 
 cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
+# print(cookies)
 
 # cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
 start_time = book_day + " " + book_time.split("-")[0]
