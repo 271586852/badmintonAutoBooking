@@ -7,9 +7,111 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import requests
 import  json
+import datetime
+import requests
+import json
+import time
+from pprint import pprint
+import random
+import pytz
+from datetime import datetime
+import tkinter as tk
+import sys
+import pytz
+
+userName = 0
+password = 0
+KS_time = "21:00-22:00"
+
+def submit():
+    global userName, password, start_time, KS_time
+    userName = userNumber_entry.get()
+    password = passwordNumber_entry.get()
+    KS_time = passwordNumber_entry.get()
+    start_time = start_time_entry.get()
+    print(userName,password,KS_time,start_time)
+    root.destroy()
+
+root = tk.Tk()
+root.title("Parameter Input")
+root.geometry("300x200")
+
+userNumber_label = tk.Label(root, text="学号:")
+userNumber_label.pack()
+userNumber_entry = tk.Entry(root)
+userNumber_entry.pack()
+
+passwordNumber_label = tk.Label(root, text="密码:")
+passwordNumber_label.pack()
+passwordNumber_entry = tk.Entry(root)
+passwordNumber_entry.pack()
+
+KS_time_label = tk.Label(root, text="打球开始时间:")
+KS_time_label.pack()
+KS_time_entry = tk.Entry(root)
+KS_time_entry.pack()
+
+
+start_time_label = tk.Label(root, text="抢场运行时间:")
+start_time_label.pack()
+start_time_entry = tk.Entry(root)
+start_time_entry.insert(0, "12:29:59")  # Set default value
+start_time_entry.pack()
+
+
+submit_button = tk.Button(root, text="Submit", command=submit)
+beijing_tz = pytz.timezone('Asia/Shanghai')
+
+
+
+
+submit_button.pack()
+
+console_output = tk.Text(root)
+console_output.pack()
+
+def redirect_output():
+    console_output.insert(tk.END, "开始运行程序！" + datetime.now(beijing_tz).strftime("%H:%M:%S") + "\n")
+    sys.stdout = console_output
+
+redirect_button = tk.Button(root, text="Redirect Output", command=redirect_output)
+redirect_button.pack()
+
+root.mainloop()
 
 
 # 指定Chrome浏览器驱动的路径
+
+
+
+# 特定时间运行
+def runScriptTime(start_time):
+    
+    # 获取当前的北京时间
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
+
+    # 打印北京时间
+    print(current_time)
+    
+    if current_time >= start_time:
+        print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
+        return
+    
+    start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
+    current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
+    remaining_seconds = start_time_seconds - current_time_seconds
+    
+    print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
+    
+    while remaining_seconds > 0:
+        print(f"剩余时间：{remaining_seconds} 秒", end="\r")
+        time.sleep(1)
+        remaining_seconds -= 1
+    
+    print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
+
+
 
 
 # 配置Chrome选项以启用日志记录
@@ -31,11 +133,11 @@ book_day = "2024-03-06"
 
 username_input = driver.find_element(By.XPATH, "//*[@id='username']")
 username_input.clear()
-username_input.send_keys("2310324009")
+username_input.send_keys(userName)
 
 password_input = driver.find_element(By.XPATH,"//*[@id='password']")
 password_input.clear()
-password_input.send_keys("11185272")
+password_input.send_keys(password)
 
 # 查找登录按钮，点击进行登录
 login_button = driver.find_element(By.XPATH,"//*[@id='casLoginForm']/p[5]/button")
@@ -67,8 +169,53 @@ print('cookies保存成功！')
 for cookie in all_cookies:
     print(cookie)
     
-time.sleep(3)
+runScriptTime(start_time)
+
+xpath0 = '//*[@id="apply"]/div[2]/div[2]/div[3]/div' #方便实时更新和切换
+button0 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath0)))
+button0.click()
+# time.sleep(3)
 print('---------------------------------')
+# 选择运动类型
+
+xpath1 = '//*[@id="apply"]/div[2]/div[2]/div[1]' #羽毛球
+# xpath1 = '//*[@id="apply"]/div[2]/div[2]/div[2]' #足球
+button1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath1)))
+button1.click()
+
+# 选择日期
+xpath2 = '//*[@id="apply"]/div[3]/div[4]/div[2]/label/div[2]'
+button2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath2)))
+button2.click()
+
+
+# 选择时间
+KSTime = 14
+# '//*[@id="apply"]/div[3]/div[6]/div[13]/label/div[2]'
+# '//*[@id="apply"]/div[3]/div[6]/div[14]/label/div[2]'
+hour = int(KS_time.split(":")[0])
+KSTime = hour - 7  # Assuming the starting hour is 8:00 AM
+
+xpath3 = '//*[@id="apply"]/div[3]/div[6]/div[' + str(KSTime) + ']/label/div[2]'
+button3 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath3)))
+button3.click()
+
+
+# 选择场地
+area = 26
+A6 = '//*[@id="apply"]/div[3]/div[10]/div[4]/label/div[2]'
+B6 = '//*[@id="apply"]/div[3]/div[10]/div[10]/label/div[2]'
+C6 = '//*[@id="apply"]/div[3]/div[10]/div[18]/label/div[2]'
+D6 = '//*[@id="apply"]/div[3]/div[10]/div[26]/label/div[2]'
+
+xpath4 = '//*[@id="apply"]/div[3]/div[10]/div[' + str(area) + ']/label/div[2]'
+button4 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath4)))
+button4.click()
+
+# 提交预约
+xpath5 = '//*[@id="apply"]/div[3]/div[11]/button[2]'
+button5 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath5)))
+button5.click()
 
 
 
