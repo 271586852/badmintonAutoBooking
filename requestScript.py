@@ -7,6 +7,9 @@ import random
 import pytz
 from datetime import datetime
 
+# requeset库发送请求
+# getTimeList、getOpeningRoom、bookRoom三个函数分别用于获取可预约时间、获取可预约场地、预约场地
+# 设置运行时间，当时间到达时，运行程序
 
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
@@ -21,9 +24,9 @@ from datetime import datetime
 # 14：45
 cookie_str ='EMAP_LANG=zh; _WEU=NSUDWf1tGICtvoeNyRVYB6_Hcu1JFg*f68wEF0RoYx4XezZ3vaBNs1uq9kOCiPBh7bHsuBrp0jzYywmf_vw6tzP308bgLV97gKOMcSTivwEMN2Ha18B6uTCtdGx6FuzroeJR1o1DbSdbNgJexDuzFWypuirWvCVBN7r4lW2TyhbdzbVSP6OVzUij8jiDPOK2va6rMMr*xic.; asessionid=bb2e1ce1-f376-43dd-bef2-461385b7bd36; route=6fcc95effda7818ac250c10acfaab6fc'
 # cookie_str = 'EMAP_LANG=zh; _WEU=MkijGTesq4L966Q**U3omvpz6x5AzwY3gzf*LcfeUMEaKRivEAI2_wEtXGaI*ZoyhPzNyxJKeLsMYqHYQqdGstvulPXsvLV3hUc8lhbETRV8FNh2BPb58s59wHKfNMl3JoQvdOddIgj5gIEAnWCjYx11ukJdCNsEae2j6liIFIxrwn_Vomf9UegMeaybUT9a; asessionid=13b3af03-4632-4101-b513-b9326e94bab5; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
-book_time = "19:00-20:00"
-book_day = "2024-03-06"
-run_time = "12:29:57"
+book_time = "20:00-21:00"
+book_day = "2024-03-14"
+run_time = "12:29:59"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
 LXFS = "18218196660"
@@ -209,7 +212,6 @@ def getTimeList():
                     booked_times.append(item['NAME'])
             print(book_day,'可预约时间为',booked_times,'\n')
             
-            
 
             if booked_times:
                 if book_time not in booked_times:
@@ -248,17 +250,17 @@ def getTimeList():
                     print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
-                
-
-            
 
         except json.JSONDecodeError:
-            print("无效的 JSON 数据: ", re.text)
+            # print("无效的 JSON 数据: ", re.text)
+            if "忘记密码" in re.text:
+                print("Error: 请重新获取cookie")
             return False
  
     except requests.RequestException as e:
-        print(f"请求错误: {e}")
-        return False  
+        error_message = str(e)
+        print(f"请求错误: {error_message}")
+        return False
 
 def get_login_cookies(username, password, login_url):
     session = requests.Session()
@@ -306,12 +308,9 @@ def runScriptTime(start_time):
     
     print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
-
 def startRun():
     getTimeList()
     print('运行完毕')
-
-    
 
 if __name__ == "__main__":
 
