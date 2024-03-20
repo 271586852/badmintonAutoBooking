@@ -18,10 +18,71 @@ from datetime import datetime
 import tkinter as tk
 import sys
 import pytz
+import random
+
+# 密码以星号替代
+# 
 
 userName = 0
 password = 0
 KS_time = "21:00-22:00"
+operatingMode = 0
+start_time = "12:29:59"
+
+root = tk.Tk()
+root.title("Parameter Input")
+root.geometry("300x300")
+
+userNumber_label = tk.Label(root, text="学号:")
+userNumber_label.pack()
+userNumber_entry = tk.Entry(root)
+userNumber_entry.pack()
+
+passwordNumber_label = tk.Label(root, text="密码:")
+passwordNumber_label.pack()
+passwordNumber_entry = tk.Entry(root, show="*")
+passwordNumber_entry.pack()
+
+KS_time_label = tk.Label(root, text="打球开始时间:")
+KS_time_label.pack()
+KS_time_entry = tk.Entry(root)
+KS_time_entry.insert(0, "21:00-22:00")  # Set default value
+KS_time_entry.pack()
+
+
+run_mode = tk.IntVar()
+
+run_mode_label = tk.Label(root, text="运行模式:")
+run_mode_label.pack()
+
+immediate_run_radio = tk.Radiobutton(root, text="立即运行", variable=run_mode, value=1)
+immediate_run_radio.pack()
+
+scheduled_run_radio = tk.Radiobutton(root, text="计划运行", variable=run_mode, value=2)
+scheduled_run_radio.pack()
+
+start_time_label = tk.Label(root, text="开始时间:")
+start_time_entry = tk.Entry(root)
+start_time_entry.insert(0, "12:29:59")  # Set default value
+
+def show_start_time_entry():
+    start_time_label.pack()
+    start_time_entry.pack()
+
+def hide_start_time_entry():
+    start_time_label.pack_forget()
+    start_time_entry.pack_forget()
+
+def handle_run_mode_selection():
+    if run_mode.get() == 1:
+        hide_start_time_entry()
+    else:
+        show_start_time_entry()
+
+scheduled_run_radio.configure(command=handle_run_mode_selection)
+immediate_run_radio.configure(command=handle_run_mode_selection)
+
+handle_run_mode_selection()
 
 def submit():
     global userName, password, start_time, KS_time
@@ -32,40 +93,14 @@ def submit():
     print(userName,password,KS_time,start_time)
     root.destroy()
 
-root = tk.Tk()
-root.title("Parameter Input")
-root.geometry("300x200")
-
-userNumber_label = tk.Label(root, text="学号:")
-userNumber_label.pack()
-userNumber_entry = tk.Entry(root)
-userNumber_entry.pack()
-
-passwordNumber_label = tk.Label(root, text="密码:")
-passwordNumber_label.pack()
-passwordNumber_entry = tk.Entry(root)
-passwordNumber_entry.pack()
-
-KS_time_label = tk.Label(root, text="打球开始时间:")
-KS_time_label.pack()
-KS_time_entry = tk.Entry(root)
-KS_time_entry.pack()
-
-
-start_time_label = tk.Label(root, text="抢场运行时间:")
-start_time_label.pack()
-start_time_entry = tk.Entry(root)
-start_time_entry.insert(0, "12:29:59")  # Set default value
-start_time_entry.pack()
-
-
 submit_button = tk.Button(root, text="Submit", command=submit)
+submit_button.pack()
+
+
+
+
 beijing_tz = pytz.timezone('Asia/Shanghai')
 
-
-
-
-submit_button.pack()
 
 console_output = tk.Text(root)
 console_output.pack()
@@ -184,9 +219,14 @@ button1 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPA
 button1.click()
 
 # 选择日期
-xpath2 = '//*[@id="apply"]/div[3]/div[4]/div[2]/label/div[2]'
-button2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath2)))
-button2.click()
+try:
+    xpath2 = '//*[@id="apply"]/div[3]/div[4]/div[2]/label/div[2]'
+    button2 = WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH, xpath2)))
+    button2.click()
+except:
+    xpath2 = '//*[@id="apply"]/div[3]/div[4]/div/label/div[2]'
+    button2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath2)))
+    button2.click()
 
 
 # 选择时间
@@ -196,21 +236,40 @@ KSTime = 14
 hour = int(KS_time.split(":")[0])
 KSTime = hour - 7  # Assuming the starting hour is 8:00 AM
 
-xpath3 = '//*[@id="apply"]/div[3]/div[6]/div[' + str(KSTime) + ']/label/div[2]'
+# xpath3 = '//*[@id="apply"]/div[3]/div[6]/div[' + str(KSTime) + ']/label/div[2]'
+xpath3 = '//*[@id="apply"]/div[3]/div[6]/div[12]/label/div[2]'
+
 button3 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath3)))
 button3.click()
 
 
 # 选择场地
-area = 26
-A6 = '//*[@id="apply"]/div[3]/div[10]/div[4]/label/div[2]'
-B6 = '//*[@id="apply"]/div[3]/div[10]/div[10]/label/div[2]'
-C6 = '//*[@id="apply"]/div[3]/div[10]/div[18]/label/div[2]'
-D6 = '//*[@id="apply"]/div[3]/div[10]/div[26]/label/div[2]'
+# area = 26
+# A6 = '//*[@id="apply"]/div[3]/div[10]/div[4]/label/div[2]'
+# B6 = '//*[@id="apply"]/div[3]/div[10]/div[10]/label/div[2]'
+# C6 = '//*[@id="apply"]/div[3]/div[10]/div[18]/label/div[2]'
+# D6 = '//*[@id="apply"]/div[3]/div[10]/div[26]/label/div[2]'
 
-xpath4 = '//*[@id="apply"]/div[3]/div[10]/div[' + str(area) + ']/label/div[2]'
-button4 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath4)))
-button4.click()
+# xpath4 = '//*[@id="apply"]/div[3]/div[10]/div[' + str(area) + ']/label/div[2]'
+# button4 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath4)))
+# button4.click()
+
+# 足球：'//*[@id="apply"]/div[3]/div[10]/div/label/div[2]'
+# 羽毛球：'//*[@id="apply"]/div[3]/div[6]/div/label/div[2]'
+
+# 找到所有匹配的元素
+elements = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="apply"]/div[3]/div[10]/div/label/div[2]')))
+
+# 过滤出可点击的元素
+clickable_elements = [element for element in elements if element.is_enabled() and element.is_displayed()]
+# 过滤出不可点击的元素
+unclickable_elements = [element for element in elements if not element.is_enabled() or not element.is_displayed()]
+print('不可点击:',unclickable_elements,'\n')
+print('可点击:',clickable_elements,'\n')
+
+# 随机选择一个元素进行点击
+random.choice(clickable_elements).click()
+
 
 # 提交预约
 xpath5 = '//*[@id="apply"]/div[3]/div[11]/button[2]'

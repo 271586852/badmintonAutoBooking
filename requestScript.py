@@ -22,10 +22,10 @@ from datetime import datetime
 # 7 手机号
 
 # 14：45
-cookie_str ='EMAP_LANG=zh; _WEU=NSUDWf1tGICtvoeNyRVYB6_Hcu1JFg*f68wEF0RoYx4XezZ3vaBNs1uq9kOCiPBh7bHsuBrp0jzYywmf_vw6tzP308bgLV97gKOMcSTivwEMN2Ha18B6uTCtdGx6FuzroeJR1o1DbSdbNgJexDuzFWypuirWvCVBN7r4lW2TyhbdzbVSP6OVzUij8jiDPOK2va6rMMr*xic.; asessionid=bb2e1ce1-f376-43dd-bef2-461385b7bd36; route=6fcc95effda7818ac250c10acfaab6fc'
+cookie_str = 'EMAP_LANG=zh; _WEU=605*3s0zRABFv5Wz5gbxjhcy3Hlj_akcxLcZKZD2xQGLsloKv_5yxRfjr7ESsPkNa4BOpuqneVUNeMIxXVwNHkurvYhiEeI1XveQQUENR7LnvrFz0yMthYvc1nI06_ECo4B5NC0Pwnwn1wP4yDu2IdfF4lyEZ0qIJc3ZS8tZ0BgH1X8xVJanl24*1rq*42QwqlrpQ6SSGwL.; XK_TOKEN=02bcffa6-5a3f-497b-9305-a0b518174649; amp.locale=undefined; JSESSIONID=VKEyval1_ojkDjX5z3tFNf8GoRt9yMsjFErKN0VJXZFMZl4GLyGd!314775203; asessionid=9904074b-650d-4a44-aed4-d1189afe7124; route=f9bb7d1dbb51bc04862ec2b9cddaff48; MOD_AUTH_CAS=MOD_AUTH_ST-559878-gt3G6DdLO5P0hlpKVhJI1710906753254-dSJ7-cas'
 # cookie_str = 'EMAP_LANG=zh; _WEU=MkijGTesq4L966Q**U3omvpz6x5AzwY3gzf*LcfeUMEaKRivEAI2_wEtXGaI*ZoyhPzNyxJKeLsMYqHYQqdGstvulPXsvLV3hUc8lhbETRV8FNh2BPb58s59wHKfNMl3JoQvdOddIgj5gIEAnWCjYx11ukJdCNsEae2j6liIFIxrwn_Vomf9UegMeaybUT9a; asessionid=13b3af03-4632-4101-b513-b9326e94bab5; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
 book_time = "20:00-21:00"
-book_day = "2024-03-14"
+book_day = "2024-03-21"
 run_time = "12:29:59"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
@@ -323,7 +323,7 @@ if __name__ == "__main__":
     # get_login_cookies(username, password, login_url)
 
     # 设定运行时间，测试时可注释掉，可即刻运行
-    # runScriptTime(run_time)
+    runScriptTime(run_time)
     # 入口函数
     startRun()
 
