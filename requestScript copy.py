@@ -21,11 +21,10 @@ from datetime import datetime
 # 6 姓名
 # 7 手机号
 
-# 14：45
-cookie_str = 'EMAP_LANG=zh; _WEU=hsI00YWgHUlwCr0plETM*tG3pb1YkPt77pLtuK8LQjEdXaBzJahJnXWs8zbxDCtH6yVRPJoFU8T5aSMvUjOEA_Ayho*Zvgqr2bD1wguy57IzEKnG3hvZcc5mQ_LfaY9QdsiL_0O92V0y61_YtAooSzsZ2dm5ntvEUKl1h7p3ZlKLmLmDJa1YGDmEF3U0NqLFoO*GPv9MXEL.; XK_TOKEN=02bcffa6-5a3f-497b-9305-a0b518174649; amp.locale=undefined; JSESSIONID=VKEyval1_ojkDjX5z3tFNf8GoRt9yMsjFErKN0VJXZFMZl4GLyGd!314775203; MOD_AUTH_CAS=MOD_AUTH_ST-681086-rcPeffKbZ69ODKsqQ2VW1711340844361-dSJ7-cas; asessionid=111fc669-3ee0-4e92-b06f-4ccdde8e9f41; route=c74f3c8250d849c2cfd6230ee3f779bd'
-# cookie_str = 'EMAP_LANG=zh; _WEU=MkijGTesq4L966Q**U3omvpz6x5AzwY3gzf*LcfeUMEaKRivEAI2_wEtXGaI*ZoyhPzNyxJKeLsMYqHYQqdGstvulPXsvLV3hUc8lhbETRV8FNh2BPb58s59wHKfNMl3JoQvdOddIgj5gIEAnWCjYx11ukJdCNsEae2j6liIFIxrwn_Vomf9UegMeaybUT9a; asessionid=13b3af03-4632-4101-b513-b9326e94bab5; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
+# ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败；若需要抢场，最好在当天12点左右从网站获取并更新下面的cookie--------------
+cookie_str = 'EMAP_LANG=zh; _WEU=Oh88bbR6_IRfZ66aKJYpZJso9Bas6CL7LJZTbJSqPI_hQ50eEizi9J9jU71Q4KsZqmQtwg5BZT20lh9qXtS7n1v0q8hIAt_U53oxCef_eIJlD8Cc6_eYFMfhTaSSemdQ*CSkA5sDk8IXWw9zYfleSi*bpJZRztgvRrK9hAiUk1wEdHW9fPoMJS..; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-731267-Z5kIXgqogCJd7mR2G3i61711425958445-fvKD-cas; route=cb53dd1ffa5940bf740b34afe353a0ed'
 book_time = "21:00-22:00"
-book_day = "2024-03-26"
+book_day = "2024-03-27"
 run_time = "12:29:59"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"

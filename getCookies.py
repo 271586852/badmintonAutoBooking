@@ -14,14 +14,21 @@ import time
 from pprint import pprint
 import random
 import pytz
-from datetime import datetime
+from datetime import datetime as dt
 import tkinter as tk
 import sys
 import pytz
 import random
+import datetime 
+
 
 # 密码以星号替代
 # 
+
+import schedule
+import time
+
+
 
 userName = 0
 password = 0
@@ -33,6 +40,8 @@ root = tk.Tk()
 root.title("Parameter Input")
 root.geometry("300x300")
 
+book_day_var = tk.StringVar()
+
 userNumber_label = tk.Label(root, text="学号:")
 userNumber_label.pack()
 userNumber_entry = tk.Entry(root)
@@ -43,55 +52,58 @@ passwordNumber_label.pack()
 passwordNumber_entry = tk.Entry(root, show="*")
 passwordNumber_entry.pack()
 
+tk.Label(root, text="订场日期:").pack()
+current_date = datetime.date.today()
+next_date = current_date + datetime.timedelta(days=1)
+book_day_var.set(next_date.strftime("%Y-%m-%d"))
+tk.Entry(root, textvariable=book_day_var).pack()
+
 KS_time_label = tk.Label(root, text="打球开始时间:")
 KS_time_label.pack()
 KS_time_entry = tk.Entry(root)
 KS_time_entry.insert(0, "21:00-22:00")  # Set default value
 KS_time_entry.pack()
 
-
 run_mode = tk.IntVar()
 
 run_mode_label = tk.Label(root, text="运行模式:")
 run_mode_label.pack()
 
-immediate_run_radio = tk.Radiobutton(root, text="立即运行", variable=run_mode, value=1)
+runTimeNow = True
+
+immediate_run_radio = tk.Radiobutton(root, text="立即运行", variable=run_mode, value=1, command=lambda: set_run_time(True))
 immediate_run_radio.pack()
 
-scheduled_run_radio = tk.Radiobutton(root, text="计划运行", variable=run_mode, value=2)
+scheduled_run_radio = tk.Radiobutton(root, text="计划运行", variable=run_mode, value=2, command=lambda: set_run_time(False))
 scheduled_run_radio.pack()
+
+# Set default value
+scheduled_run_radio.select()
+
+def set_run_time(value):
+    global runTimeNow
+    runTimeNow = value
 
 start_time_label = tk.Label(root, text="开始时间:")
 start_time_entry = tk.Entry(root)
-start_time_entry.insert(0, "12:29:59")  # Set default value
-
-def show_start_time_entry():
-    start_time_label.pack()
-    start_time_entry.pack()
-
-def hide_start_time_entry():
-    start_time_label.pack_forget()
-    start_time_entry.pack_forget()
-
-def handle_run_mode_selection():
-    if run_mode.get() == 1:
-        hide_start_time_entry()
-    else:
-        show_start_time_entry()
-
-scheduled_run_radio.configure(command=handle_run_mode_selection)
-immediate_run_radio.configure(command=handle_run_mode_selection)
-
-handle_run_mode_selection()
+start_time_entry.insert(0, "12:30:00")  # Set default value
+start_time_label.pack()
+start_time_entry.pack()
 
 def submit():
-    global userName, password, start_time, KS_time
+    global userName, password, start_time, KS_time, start_time_entry
     userName = userNumber_entry.get()
     password = passwordNumber_entry.get()
     KS_time = passwordNumber_entry.get()
     start_time = start_time_entry.get()
-    print(userName,password,KS_time,start_time)
-    root.destroy()
+    print(userName, password, KS_time, start_time)
+    if runTimeNow:
+        runScriptTime(start_time_entry)
+
+
+def check_window_status():
+    if not root.winfo_exists():
+        sys.exit(0)
 
 submit_button = tk.Button(root, text="Submit", command=submit)
 submit_button.pack()
@@ -106,7 +118,7 @@ console_output = tk.Text(root)
 console_output.pack()
 
 def redirect_output():
-    console_output.insert(tk.END, "开始运行程序！" + datetime.now(beijing_tz).strftime("%H:%M:%S") + "\n")
+    console_output.insert(tk.END, "开始运行程序！" + dt.now(beijing_tz).strftime("%H:%M:%S") + "\n")
     sys.stdout = console_output
 
 redirect_button = tk.Button(root, text="Redirect Output", command=redirect_output)
@@ -124,13 +136,13 @@ def runScriptTime(start_time):
     
     # 获取当前的北京时间
     beijing_tz = pytz.timezone('Asia/Shanghai')
-    current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
+    current_time = dt.now(beijing_tz).strftime("%H:%M:%S")
 
     # 打印北京时间
     print(current_time)
     
     if current_time >= start_time:
-        print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
+        print("已经过了指定的开始时间。", dt.now(beijing_tz).strftime("%H:%M:%S"))
         return
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
@@ -144,7 +156,7 @@ def runScriptTime(start_time):
         time.sleep(1)
         remaining_seconds -= 1
     
-    print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
+    print("开始运行程序！", dt.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
 
 
@@ -178,6 +190,8 @@ password_input.send_keys(password)
 login_button = driver.find_element(By.XPATH,"//*[@id='casLoginForm']/p[5]/button")
 login_button.click()
 
+time.sleep(10)
+
 # 等待[@id="sportVenue"]/div[1]/div/div[1]出现
 area_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[1]/div/div[1]')))
 area_button.click()
@@ -204,7 +218,10 @@ print('cookies保存成功！')
 for cookie in all_cookies:
     print(cookie)
     
+
 runScriptTime(start_time)
+
+
 
 xpath0 = '//*[@id="apply"]/div[2]/div[2]/div[3]/div' #方便实时更新和切换
 button0 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath0)))
@@ -324,3 +341,5 @@ time.sleep(500)
 
 # 关闭浏览器
 driver.close()
+
+root.destroy()

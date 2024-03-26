@@ -37,9 +37,9 @@ headers = {}
 book_time = "19:00-20:00"
 book_day = "2024-03-03"
 run_time = "12:29:00"
-YYRGH = "2310324009"
-YYRXM = "顾仁杰"
-LXFS = "18218196660"
+YYRGH = ""
+YYRXM = ""
+LXFS = ""
 
 
 # 更新请求数据
@@ -133,6 +133,7 @@ def submit_action():
     YYRXM = YYRXM_var.get()
     LXFS = LXFS_var.get()
 
+
     # cookie_str = 'EMAP_LANG=zh; _WEU=rRRwyrCKKMI23PHd5YPOTIEWeqX9PxqH155eG14O69G5FqbO_B9NvocYb5cEqH34y*7wQasWUhNcPhU_AmqklzwN3jjZogVMGphYJhVagcrNDj*fbi3vZkyOlfKpcSyI0pi9jO7IuD0z9T*bPdX1tYmU5zd1koJyouGqEJ5anywd2Mz3sFCEW9srRMmEXLoFjXbhWANexkE5iyVhjacwbj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; asessionid=8fcaa73d-8de8-48a6-b300-7ec2cea60917; route=f9bb7d1dbb51bc04862ec2b9cddaff48; MOD_AUTH_CAS=MOD_AUTH_ST-259230-oPCkHFTFfQYrz1dmqSaa1709438447447-n3kw-cas'
 
     # book_time = "19:00-20:00"
@@ -166,10 +167,12 @@ def submit_action():
         "XQDM": 1
     }
 
+    print(cookie_str, book_time, book_day, run_time, YYRGH, YYRXM, LXFS)
+
     # 输出以确认
     print(f"预定日期：{book_day}, 预定时间：{book_timeKS}")
-
     # 根据用户选择执行
+    print('run_script_var',run_script_var.get())
     if run_script_var.get():
         runScriptTime(run_time)
         startRun()
@@ -312,7 +315,7 @@ def getOpeningRoom():
 
             else:
                 getOpeningRoomNumber += 1
-                if getOpeningRoomNumber < 10:
+                if getOpeningRoomNumber < 5:
                     time.sleep(0.2)
                     print('调用第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
@@ -335,6 +338,9 @@ def getTimeList():
     # getOpeningRoom_data["KSSJ"] = book_timeKS
     # getOpeningRoom_data["JSSJ"] = book_timeJS
     # print('getTimeList',getOpeningRoom_data)
+
+
+    print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
         re.raise_for_status()
@@ -347,8 +353,6 @@ def getTimeList():
                     booked_times.append(item['NAME'])
             print(book_day,'可预约时间为',booked_times,'\n')
             
-            
-
             if booked_times:
                 if book_time not in booked_times:
                     if "19:00-20:00" in booked_times:
