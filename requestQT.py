@@ -25,6 +25,7 @@ available_rooms = []
 booked_times = []
 getTimeListNumber = 0
 getOpeningRoomNumber = 0
+bookRoomNumber = 0
 cookies = {}
 start_time = ''
 end_time = ''
@@ -235,6 +236,7 @@ def submit_action():
 
 
 def bookRoom(availableRoom):
+    global available_rooms,bookRoomNumber
     # print('bookRoom函数',available_rooms)
     if "7981ade524bd4b1ab92d3a622fb0d3af" in availableRoom:
         Room = "7981ade524bd4b1ab92d3a622fb0d3af"
@@ -272,22 +274,28 @@ def bookRoom(availableRoom):
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
                 print("您来迟了")
-                availableRoom.remove(Room)  
-                print("移除后的",availableRoom)
+                availableRoom.remove(Room)
+                print("移除后的",len(available_rooms))
                 if availableRoom:
                     bookRoom(availableRoom)  
                 else:
                     print(book_day,book_time,"这个时间段已经没空场了")
                     getTimeList()
                     return False
-
+            
             if "您已预约" in re.text:
                 print("您已预约")
                 return False
             
     except requests.RequestException as e:
         print(f"请求错误: {e}")
+        bookRoomNumber += 1
+        if bookRoomNumber < 3:
+            time.sleep(0.2)
+            bookRoom(availableRoom)        
         return False
+    
+    print('bookRoom调用结束')
     
 def getOpeningRoom():
     global available_rooms,getOpeningRoomNumber
@@ -310,24 +318,34 @@ def getOpeningRoom():
             print('\n')
             
             if available_rooms:
-                print(available_rooms)
+                print('可预约场地有',len(available_rooms),'个')
                 bookRoom(available_rooms)
 
             else:
                 getOpeningRoomNumber += 1
                 if getOpeningRoomNumber < 5:
                     time.sleep(0.2)
-                    print('调用第',getOpeningRoomNumber,'次',book_day,"没有空场了")
+                    print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
                 return False
         
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
+            getOpeningRoomNumber += 1
+            if getOpeningRoomNumber < 3:
+                time.sleep(0.2)
+                getOpeningRoom()
             return False
  
     except requests.RequestException as e:
         print(f"请求错误: {e}")
+        getOpeningRoomNumber += 1
+        if getOpeningRoomNumber < 3:
+            time.sleep(0.2)
+            getOpeningRoom()
         return False
+    
+    print('getOpeningRoom调用结束')
 
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber
@@ -385,22 +403,29 @@ def getTimeList():
                 
             else:
                 getTimeListNumber += 1
-                if getTimeListNumber < 10:
+                if getTimeListNumber < 5:
                     time.sleep(0.2)
                     print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
                 
-
-            
-
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
+            getTimeListNumber += 1
+            if getTimeListNumber < 5:
+                time.sleep(0.2)
+                getTimeList()
             return False
  
     except requests.RequestException as e:
         print(f"请求错误: {e}")
+        getTimeListNumber += 1
+        if getTimeListNumber < 5:
+            time.sleep(0.2)
+            getTimeList()
         return False  
+    
+    print('getTimeList调用结束')
 
 def get_login_cookies(username, password, login_url):
     session = requests.Session()
@@ -451,7 +476,7 @@ def runScriptTime(start_time):
 
 def startRun():
     getTimeList()
-    print('运行完毕')
+    print('程序运行结束')
 
     
 # 创建提交按钮
