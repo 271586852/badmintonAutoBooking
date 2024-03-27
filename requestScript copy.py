@@ -22,10 +22,10 @@ from datetime import datetime
 # 7 手机号
 
 # ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败；若需要抢场，最好在当天12点左右从网站获取并更新下面的cookie--------------
-cookie_str = 'EMAP_LANG=zh; _WEU=Oh88bbR6_IRfZ66aKJYpZJso9Bas6CL7LJZTbJSqPI_hQ50eEizi9J9jU71Q4KsZqmQtwg5BZT20lh9qXtS7n1v0q8hIAt_U53oxCef_eIJlD8Cc6_eYFMfhTaSSemdQ*CSkA5sDk8IXWw9zYfleSi*bpJZRztgvRrK9hAiUk1wEdHW9fPoMJS..; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-731267-Z5kIXgqogCJd7mR2G3i61711425958445-fvKD-cas; route=cb53dd1ffa5940bf740b34afe353a0ed'
+cookie_str = 'EMAP_LANG=zh; _WEU=d*4Zdy0QAK8Fd9baI6dVsE8ewqaaH*V3Aml59N_jnM7RcCsL0pf77pZh54F_pT*gStMCFcFuwxiAXJu5f8OrcYNWvHvfmbwNa6GD0y0PIH1D2djCqduLZauP2HkT*iybsq5c0__rJTxjfxg_ADGcKxnQAboi*Tvy56Pxr0wZMnicL75p1C8olK3QlCKCyc*fw3dNHPH20KWgTFCjIkDUUo..; amp.locale=undefined; route=6fcc95effda7818ac250c10acfaab6fc; MOD_AUTH_CAS=MOD_AUTH_ST-904861-dR60w7Jh4xWARQTOYnkC1711507933717-jQ2n-cas'
 book_time = "21:00-22:00"
-book_day = "2024-03-27"
-run_time = "12:29:59"
+book_day = "2024-03-28"
+run_time = "12:30:00"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
 LXFS = "18218196660"
@@ -153,6 +153,8 @@ def bookRoom(availableRoom):
     
 def getOpeningRoom():
     global available_rooms,getOpeningRoomNumber
+    print('打印信息getOpeningRoom',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+
     # print('getOpeningRoom',getOpeningRoom_data)
     try:
         re = requests.post(urlGetOpeningRoom, data=getOpeningRoom_data, headers=headers, cookies=cookies)
@@ -177,7 +179,7 @@ def getOpeningRoom():
 
             else:
                 getOpeningRoomNumber += 1
-                if getOpeningRoomNumber < 10:
+                if getOpeningRoomNumber < 5:
                     time.sleep(0.2)
                     print('调用第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
@@ -185,11 +187,21 @@ def getOpeningRoom():
         
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
+            getOpeningRoomNumber += 1
+            if getOpeningRoomNumber < 3:
+                time.sleep(0.2)
+                getOpeningRoom()
             return False
  
     except requests.RequestException as e:
         print(f"请求错误: {e}")
+        getOpeningRoomNumber += 1
+        if getOpeningRoomNumber < 3:
+            time.sleep(0.2)
+            getOpeningRoom()
         return False
+    
+    print('getOpeningRoom调用结束')
 
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber
@@ -200,6 +212,9 @@ def getTimeList():
     # getOpeningRoom_data["KSSJ"] = book_timeKS
     # getOpeningRoom_data["JSSJ"] = book_timeJS
     # print('getTimeList',getOpeningRoom_data)
+
+    print('打印信息Gettimelist',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
         re.raise_for_status()
@@ -245,22 +260,29 @@ def getTimeList():
                 
             else:
                 getTimeListNumber += 1
-                if getTimeListNumber < 10:
+                if getTimeListNumber < 5:
                     time.sleep(0.2)
                     print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
-
+                
         except json.JSONDecodeError:
-            # print("无效的 JSON 数据: ", re.text)
-            if "忘记密码" in re.text:
-                print("Error: 请重新获取cookie")
+            print("无效的 JSON 数据: ", re.text)
+            getTimeListNumber += 1
+            if getTimeListNumber < 5:
+                time.sleep(0.2)
+                getTimeList()
             return False
  
     except requests.RequestException as e:
-        error_message = str(e)
-        print(f"请求错误: {error_message}")
-        return False
+        print(f"请求错误: {e}")
+        getTimeListNumber += 1
+        if getTimeListNumber < 5:
+            time.sleep(0.2)
+            getTimeList()
+        return False  
+    
+    print('getTimeList调用结束')
 
 def get_login_cookies(username, password, login_url):
     session = requests.Session()

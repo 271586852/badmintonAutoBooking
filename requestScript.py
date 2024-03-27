@@ -6,6 +6,10 @@ from pprint import pprint
 import random
 import pytz
 from datetime import datetime
+import datetime as dt
+
+import schedule
+
 
 # requeset库发送请求
 # getTimeList、getOpeningRoom、bookRoom三个函数分别用于获取可预约时间、获取可预约场地、预约场地
@@ -22,11 +26,11 @@ from datetime import datetime
 # 7 手机号
 
 # 14：45
-cookie_str = 'EMAP_LANG=zh; _WEU=hsI00YWgHUlwCr0plETM*tG3pb1YkPt77pLtuK8LQjEdXaBzJahJnXWs8zbxDCtH6yVRPJoFU8T5aSMvUjOEA_Ayho*Zvgqr2bD1wguy57IzEKnG3hvZcc5mQ_LfaY9QdsiL_0O92V0y61_YtAooSzsZ2dm5ntvEUKl1h7p3ZlKLmLmDJa1YGDmEF3U0NqLFoO*GPv9MXEL.; XK_TOKEN=02bcffa6-5a3f-497b-9305-a0b518174649; amp.locale=undefined; JSESSIONID=VKEyval1_ojkDjX5z3tFNf8GoRt9yMsjFErKN0VJXZFMZl4GLyGd!314775203; MOD_AUTH_CAS=MOD_AUTH_ST-681086-rcPeffKbZ69ODKsqQ2VW1711340844361-dSJ7-cas; asessionid=111fc669-3ee0-4e92-b06f-4ccdde8e9f41; route=c74f3c8250d849c2cfd6230ee3f779bd'
+cookie_str = 'EMAP_LANG=zh; _WEU=yWHzvnEjrOt1324LxQcIcWiuFJmgIYNdaN0zdSv_kV5qeT3QvZWekqMrlTWENt9gPe6qnqBzAVC6DQsPUWVxYAZDhsy4r8e*y2PvCTsaYaqGUmVoT68Yr6EFpcngEbkCBZlplF80qTBKcDFgTtNFF0h5c0EUTMIgvajtp5iOvbZVQXvemDJueoPb6UTldAstUDxY6QQbph8mqDUfwu3CHo..; amp.locale=undefined; route=6fcc95effda7818ac250c10acfaab6fc; MOD_AUTH_CAS=MOD_AUTH_ST-918750-cDKEqimW44R9XcSBkgNQ1711531859652-jQ2n-cas'
 # cookie_str = 'EMAP_LANG=zh; _WEU=MkijGTesq4L966Q**U3omvpz6x5AzwY3gzf*LcfeUMEaKRivEAI2_wEtXGaI*ZoyhPzNyxJKeLsMYqHYQqdGstvulPXsvLV3hUc8lhbETRV8FNh2BPb58s59wHKfNMl3JoQvdOddIgj5gIEAnWCjYx11ukJdCNsEae2j6liIFIxrwn_Vomf9UegMeaybUT9a; asessionid=13b3af03-4632-4101-b513-b9326e94bab5; route=f9bb7d1dbb51bc04862ec2b9cddaff48'
 book_time = "21:00-22:00"
-book_day = "2024-03-26"
-run_time = "12:29:59"
+book_day = "2024-03-28"
+run_time = "17:39:59"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
 LXFS = "18218196660"
@@ -309,6 +313,48 @@ def runScriptTime(start_time):
     
     print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
+# def job():
+#     print(f"开始运行程序！{datetime.now(pytz.timezone('Asia/Shanghai')).strftime('%H:%M:%S')}")
+
+
+# def runScriptTime(start_time, is_rescheduled=False):
+#     # Define the timezone
+#     beijing_tz = pytz.timezone('Asia/Shanghai')
+    
+#     # Get the current time and the target time as datetime objects
+#     now = dt.datetime.now(beijing_tz)
+#     today = now.date()
+#     target_time = dt.datetime.strptime(start_time, "%H:%M:%S").replace(year=today.year, month=today.month, day=today.day, tzinfo=beijing_tz)
+#     if target_time <= now:
+#         target_time += dt.timedelta(days=1)  # Adjust for the next day
+
+#     # Schedule the job at the specified start time
+#     if not is_rescheduled:
+#         schedule.every().day.at(start_time).do(job)
+
+#     # Loop to check pending jobs and run them
+#     while True:
+#         now = dt.datetime.now(beijing_tz)
+#         remaining_seconds = (target_time - now).total_seconds()
+
+#         # If remaining time is 180 seconds, cancel the countdown and reschedule
+#         if remaining_seconds <= 180 and not is_rescheduled:
+#             print("\n取消当前倒计时，将重新计划任务")
+#             schedule.clear()  # Clear existing scheduled jobs
+#             runScriptTime(start_time, is_rescheduled=True)
+#             break
+        
+#         if is_rescheduled:
+#             print(f"重新计划的任务剩余时间：{int(remaining_seconds)} 秒", end="\r")
+#         else:
+#             print(f"剩余时间：{int(remaining_seconds)} 秒", end="\r")
+
+#         schedule.run_pending()
+#         time.sleep(1)
+
+#         if remaining_seconds <= 0:
+#             break
+
 def startRun():
     getTimeList()
     print('运行完毕')
@@ -323,7 +369,7 @@ if __name__ == "__main__":
     # get_login_cookies(username, password, login_url)
 
     # 设定运行时间，测试时可注释掉，可即刻运行
-    runScriptTime(run_time)
+    # runScriptTime(run_time)
     # 入口函数
     startRun()
 

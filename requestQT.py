@@ -1,13 +1,16 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Image, ttk
 import requests
 import json
 import time
 from pprint import pprint
 import random
 import pytz
-from datetime import datetime as dt
 import datetime
+from PIL import Image, ImageTk
+import schedule
+from datetime import datetime
+import datetime as dt
 
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
@@ -34,6 +37,8 @@ book_timeJS = ''
 getTimeList_data = {}
 getOpeningRoom_data = {}
 headers = {}
+checkTime = False
+
 
 book_time = "19:00-20:00"
 book_day = "2024-03-03"
@@ -85,6 +90,28 @@ YYRXM_var = tk.StringVar()
 LXFS_var = tk.StringVar()
 run_script_var = tk.BooleanVar()
 
+# 创建按钮
+cookie_button = ttk.Button(root, text="Cookie获取教程", command=lambda: show_cookie_tutorial(root))
+cookie_button.grid(row=0, column=2)
+
+# 定义按钮点击事件
+def show_cookie_tutorial(parent):
+    # 创建一个新窗口
+    top = tk.Toplevel(parent)
+    top.title("Cookie获取教程")
+
+    # 加载图片
+    img = Image.open("cookie获取.png")
+    photo = ImageTk.PhotoImage(img)
+
+    # 根据图片大小调整窗口大小
+    top.geometry(f"{img.width}x{img.height}")
+
+    # 在新窗口中显示图片
+    label = tk.Label(top, image=photo)
+    label.image = photo  # 保持对图片的引用
+    label.pack()
+
 # 创建输入字段
 ttk.Label(root, text="Cookie 字符串:").grid(row=0, column=0, sticky=tk.W)
 ttk.Entry(root, textvariable=cookie_str_var).grid(row=0, column=1)
@@ -96,8 +123,8 @@ book_time_combobox.grid(row=1, column=1)
 book_time_var.set("20:00-21:00")
 
 ttk.Label(root, text="订场日期:").grid(row=2, column=0, sticky=tk.W)
-current_date = datetime.date.today()
-next_date = current_date + datetime.timedelta(days=1)
+current_date = dt.date.today()
+next_date = current_date + dt.timedelta(days=1)
 book_day_var.set(next_date.strftime("%Y-%m-%d"))
 ttk.Entry(root, textvariable=book_day_var).grid(row=2, column=1)
 
@@ -128,7 +155,7 @@ root.protocol("WM_DELETE_WINDOW", root.quit)
 
 # 定义提交按钮的动作
 def submit_action():
-    global cookies, start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time
+    global cookies, start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time,YYRGH,YYRXM,LXFS
     # 获取用户输入
     cookie_str = cookie_str_var.get()
     book_time = book_time_var.get()
@@ -154,7 +181,7 @@ def submit_action():
     end_time = book_day + " " + book_time.split("-")[1]
     book_timeKS = book_time.split("-")[0]
     book_timeJS = book_time.split("-")[1]
-    print(cookies,start_time)
+    # print(cookies,start_time)
 
     # 更新请求数据
     getTimeList_data = {
@@ -172,12 +199,13 @@ def submit_action():
         "XQDM": 1
     }
 
-    print(cookie_str, book_time, book_day, run_time, YYRGH, YYRXM, LXFS)
+    print('submit_action',cookie_str, book_time, book_day, run_time, YYRGH, YYRXM, LXFS)
 
     # 输出以确认
     print(f"预定日期：{book_day}, 预定时间：{book_timeKS}")
     # 根据用户选择执行
     print('run_script_var',run_script_var.get())
+    root.withdraw()
     if run_script_var.get():
         runScriptTime(run_time)
         startRun()
@@ -296,7 +324,7 @@ def bookRoom(availableRoom):
         print(f"请求错误: {e}")
         bookRoomNumber += 1
         if bookRoomNumber < 3:
-            time.sleep(0.2)
+            time.sleep(0.7)
             bookRoom(availableRoom)        
         return False
     
@@ -329,7 +357,7 @@ def getOpeningRoom():
             else:
                 getOpeningRoomNumber += 1
                 if getOpeningRoomNumber < 5:
-                    time.sleep(0.2)
+                    time.sleep(0.7)
                     print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
                 return False
@@ -338,7 +366,7 @@ def getOpeningRoom():
             print("无效的 JSON 数据: ", re.text)
             getOpeningRoomNumber += 1
             if getOpeningRoomNumber < 3:
-                time.sleep(0.2)
+                time.sleep(0.7)
                 getOpeningRoom()
             return False
  
@@ -346,14 +374,14 @@ def getOpeningRoom():
         print(f"请求错误: {e}")
         getOpeningRoomNumber += 1
         if getOpeningRoomNumber < 3:
-            time.sleep(0.2)
+            time.sleep(0.7)
             getOpeningRoom()
         return False
     
     print('getOpeningRoom调用结束')
 
 def getTimeList():
-    global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber
+    global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber,YYRGH,YYRXM,LXFS
     # print('getTimeList',getOpeningRoom_data)
     # book_time = "19:00-20:00"
     # book_timeKS = book_time.split("-")[0]
@@ -409,7 +437,7 @@ def getTimeList():
             else:
                 getTimeListNumber += 1
                 if getTimeListNumber < 5:
-                    time.sleep(0.2)
+                    time.sleep(0.7)
                     print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
@@ -418,7 +446,7 @@ def getTimeList():
             print("无效的 JSON 数据: ", re.text)
             getTimeListNumber += 1
             if getTimeListNumber < 5:
-                time.sleep(0.2)
+                time.sleep(0.7)
                 getTimeList()
             return False
  
@@ -426,7 +454,7 @@ def getTimeList():
         print(f"请求错误: {e}")
         getTimeListNumber += 1
         if getTimeListNumber < 5:
-            time.sleep(0.2)
+            time.sleep(0.7)
             getTimeList()
         return False  
     
@@ -452,17 +480,17 @@ def get_login_cookies(username, password, login_url):
     return session.cookies
 
 # 特定时间运行
-def runScriptTime(start_time):
-
+def runScriptTime(start_time,is_restarted=False):
     # 获取当前的北京时间
     beijing_tz = pytz.timezone('Asia/Shanghai')
-    current_time = dt.now(beijing_tz).strftime("%H:%M:%S")
+    current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
 
     # 打印北京时间
-    print(current_time)
+    print('currentTime',current_time)
+    print('startTime',start_time)
     
     if current_time >= start_time:
-        print("已经过了指定的开始时间。", dt.now(beijing_tz).strftime("%H:%M:%S"))
+        print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
         return
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
@@ -470,17 +498,63 @@ def runScriptTime(start_time):
     remaining_seconds = start_time_seconds - current_time_seconds
     
     print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
-    
+
+
+
     while remaining_seconds > 0:
         print(f"剩余时间：{remaining_seconds} 秒", end="\r")
         time.sleep(1)
         remaining_seconds -= 1
+            # 如果剩余时间小于60秒，并且这是首次调用（未重启过）
+        if remaining_seconds < 60 and not is_restarted:
+            print(f"剩余时间小于60秒，重新开始计时。")
+            runScriptTime(start_time, is_restarted=True)
+            return
     
-    print("开始运行程序！", dt.now(beijing_tz).strftime("%H:%M:%S"), '\n')
+    print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
+
+# def job():
+#     print(f"开始运行程序！{datetime.now(pytz.timezone('Asia/Shanghai')).strftime('%H:%M:%S')}")
+
+
+
+# def runScriptTime(start_time):
+#     # 定义时区
+#     beijing_tz = pytz.timezone('Asia/Shanghai')
+    
+#     # 获取当前时间和目标时间作为 datetime 对象
+#     now = dt.datetime.now(beijing_tz)
+#     print('当前时间', now)
+#     today = now.date()
+#     target_time = dt.datetime.strptime(start_time, "%H:%M:%S").replace(year=today.year, month=today.month, day=today.day, tzinfo=beijing_tz)
+
+#     print('目标时间', target_time)
+#     print('当前时间', now)
+#     # 在指定的开始时间安排任务
+#     schedule.every().day.at(start_time).do(job)
+
+#     # 循环检查和运行待定任务
+#     while True:
+#         now = dt.datetime.now(beijing_tz)
+#         remaining_seconds = (target_time - now).total_seconds()
+
+#         # 显示剩余时间
+#         print(f"剩余时间：{int(remaining_seconds)} 秒", end="\r")
+
+#         schedule.run_pending()
+#         time.sleep(1)
+
+#         # 当剩余时间小于等于0时退出循环
+#         if remaining_seconds <= 0:
+#             break
 
 def startRun():
+    print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+
     getTimeList()
+    # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+
     print('程序运行结束')
 
     
