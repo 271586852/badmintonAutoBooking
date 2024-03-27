@@ -122,6 +122,10 @@ run_script_var.set(True)
 
 ttk.Label(root, text="version1.0 coding by @ ", anchor="center").grid(row=9, column=0, sticky=tk.W)
 
+# 定义窗口关闭事件
+root.protocol("WM_DELETE_WINDOW", root.quit)
+
+
 # 定义提交按钮的动作
 def submit_action():
     global cookies, start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time
@@ -233,6 +237,7 @@ def submit_action():
 
 
 # ------------------------------
+
 
 
 def bookRoom(availableRoom):
