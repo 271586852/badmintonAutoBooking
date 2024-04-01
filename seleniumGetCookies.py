@@ -38,7 +38,7 @@ start_time = "12:29:59"
 
 root = tk.Tk()
 root.title("Parameter Input")
-root.geometry("300x300")
+root.geometry("300x400")
 
 book_day_var = tk.StringVar()
 
@@ -90,6 +90,35 @@ start_time_entry.insert(0, "12:30:00")  # Set default value
 start_time_label.pack()
 start_time_entry.pack()
 
+# 特定时间运行
+def runScriptTime(start_time):
+    
+    # 获取当前的北京时间
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    current_time = dt.now(beijing_tz).strftime("%H:%M:%S")
+
+    # 打印北京时间
+    print(current_time)
+    
+    if current_time >= start_time:
+        print("已经过了指定的开始时间。", dt.now(beijing_tz).strftime("%H:%M:%S"))
+        return
+    
+    start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
+    current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
+    remaining_seconds = start_time_seconds - current_time_seconds
+    
+    print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
+    
+    while remaining_seconds > 0:
+        print(f"剩余时间：{remaining_seconds} 秒", end="\r")
+        time.sleep(1)
+        remaining_seconds -= 1
+    
+    print("开始运行程序！", dt.now(beijing_tz).strftime("%H:%M:%S"), '\n')
+
+
+
 def submit():
     global userName, password, start_time, KS_time, start_time_entry
     userName = userNumber_entry.get()
@@ -97,8 +126,8 @@ def submit():
     KS_time = passwordNumber_entry.get()
     start_time = start_time_entry.get()
     print(userName, password, KS_time, start_time)
-    if runTimeNow:
-        runScriptTime(start_time_entry)
+    # if runTimeNow:
+    #     runScriptTime(start_time_entry.get())
 
 
 def check_window_status():
@@ -130,33 +159,6 @@ root.mainloop()
 # 指定Chrome浏览器驱动的路径
 
 
-
-# 特定时间运行
-def runScriptTime(start_time):
-    
-    # 获取当前的北京时间
-    beijing_tz = pytz.timezone('Asia/Shanghai')
-    current_time = dt.now(beijing_tz).strftime("%H:%M:%S")
-
-    # 打印北京时间
-    print(current_time)
-    
-    if current_time >= start_time:
-        print("已经过了指定的开始时间。", dt.now(beijing_tz).strftime("%H:%M:%S"))
-        return
-    
-    start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
-    current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
-    remaining_seconds = start_time_seconds - current_time_seconds
-    
-    print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
-    
-    while remaining_seconds > 0:
-        print(f"剩余时间：{remaining_seconds} 秒", end="\r")
-        time.sleep(1)
-        remaining_seconds -= 1
-    
-    print("开始运行程序！", dt.now(beijing_tz).strftime("%H:%M:%S"), '\n')
 
 
 
@@ -274,18 +276,37 @@ button3.click()
 # 足球：'//*[@id="apply"]/div[3]/div[10]/div/label/div[2]'
 # 羽毛球：'//*[@id="apply"]/div[3]/div[6]/div/label/div[2]'
 
-# 找到所有匹配的元素
-elements = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="apply"]/div[3]/div[10]/div/label/div[2]')))
+# # 找到所有匹配的元素
+# elements = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="apply"]/div[3]/div[10]/div/label/div[2]')))
 
-# 过滤出可点击的元素
-clickable_elements = [element for element in elements if element.is_enabled() and element.is_displayed()]
-# 过滤出不可点击的元素
-unclickable_elements = [element for element in elements if not element.is_enabled() or not element.is_displayed()]
-print('不可点击:',unclickable_elements,'\n')
-print('可点击:',clickable_elements,'\n')
+# # 过滤出可点击的元素
+# clickable_elements = [element for element in elements if element.is_enabled() and element.is_displayed()]
+# # 过滤出不可点击的元素
+# unclickable_elements = [element for element in elements if not element.is_enabled() or not element.is_displayed()]
+# print('不可点击:',unclickable_elements,'\n')
+# print('可点击:',clickable_elements,'\n')
+
+
+# 创建一个requests.session对象
+session = requests.Session()
+agent = driver.execute_script("return navigator.userAgent")
+print(agent,type(agent))
+# 获取登录cookies
+saveCookies = driver.get_cookies()
+c = saveCookies[0]['value']
+print(saveCookies)
+# 将cookies设置到session中
+for cookie in saveCookies:
+  session.cookies.set(cookie['name'],cookie['value'])
+print('session的值', '键名:', session.cookies.keys(), 'value值:', session.cookies.values())
+
+# cookies_str = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in session.cookies])
+cookies_str = '; '.join([f"{cookie.name}={cookie.value}" for cookie in session.cookies])
+print('\n','已经拼接：',cookies_str)
+time.sleep(300)
 
 # 随机选择一个元素进行点击
-random.choice(clickable_elements).click()
+# random.choice(clickable_elements).click()
 
 
 # 提交预约

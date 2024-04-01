@@ -302,7 +302,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data,'预约成功，时间为',book_day,book_time,dt.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
+            print(re_data,'预约成功，时间为',book_day,book_time,datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -382,14 +382,6 @@ def getOpeningRoom():
 
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber,YYRGH,YYRXM,LXFS
-    # print('getTimeList',getOpeningRoom_data)
-    # book_time = "19:00-20:00"
-    # book_timeKS = book_time.split("-")[0]
-    # book_timeJS = book_time.split("-")[1]   
-    # getOpeningRoom_data["KSSJ"] = book_timeKS
-    # getOpeningRoom_data["JSSJ"] = book_timeJS
-    # print('getTimeList',getOpeningRoom_data)
-
 
     print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
     try:

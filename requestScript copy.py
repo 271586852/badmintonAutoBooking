@@ -22,10 +22,10 @@ from datetime import datetime
 # 7 手机号
 
 # ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败；若需要抢场，最好在当天12点左右从网站获取并更新下面的cookie--------------
-cookie_str = 'EMAP_LANG=zh; _WEU=d*4Zdy0QAK8Fd9baI6dVsE8ewqaaH*V3Aml59N_jnM7RcCsL0pf77pZh54F_pT*gStMCFcFuwxiAXJu5f8OrcYNWvHvfmbwNa6GD0y0PIH1D2djCqduLZauP2HkT*iybsq5c0__rJTxjfxg_ADGcKxnQAboi*Tvy56Pxr0wZMnicL75p1C8olK3QlCKCyc*fw3dNHPH20KWgTFCjIkDUUo..; amp.locale=undefined; route=6fcc95effda7818ac250c10acfaab6fc; MOD_AUTH_CAS=MOD_AUTH_ST-904861-dR60w7Jh4xWARQTOYnkC1711507933717-jQ2n-cas'
+cookie_str = 'EMAP_LANG=zh; _WEU=5Z3rk7wKaaZP4P7arCIYNoqgtZZcruv86mi8x1Ec6V5I8fuIe3HMb*nU_ubcrR3JCtQrSncoNhuX8WI9lzIMVhYDw67LIfCTvxfd7SXcGV4pCQfoAV6jE*hwNUMRWMbD3UqRrHlLFmhN*aaPiFM6VNglNNz2fHZQdPUoADLEDpyecqqOrdoGiWKkq3wyOL_Ejj1ECu*M68clxPCuIohPkj..; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-822361-4SZpwmhdhhPUzeNLf9e91711686144602-fvKD-cas; asessionid=ac12a6be-ffc0-4230-bce5-302f5bc58e54; route=c74f3c8250d849c2cfd6230ee3f779bd'
 book_time = "21:00-22:00"
-book_day = "2024-03-28"
-run_time = "12:30:00"
+book_day = "2024-03-30"
+run_time = "12:30:05"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
 LXFS = "18218196660"
