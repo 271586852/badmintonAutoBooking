@@ -86,7 +86,7 @@ headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cac
 
 # 创建窗口
 root = tk.Tk()
-root.title("预约系统")
+root.title("羽毛球场订场666")
 
 # 定义变量
 username_var = tk.StringVar()
@@ -101,43 +101,39 @@ LXFS_var = tk.StringVar()
 run_script_var = tk.BooleanVar()
 
 # 创建按钮
-cookie_button = ttk.Button(root, text="Cookie获取教程", command=lambda: show_cookie_tutorial(root))
-cookie_button.grid(row=0, column=2)
+tutorial_button = ttk.Button(root, text="订场教程", command=lambda: show_cookie_tutorial(root))
+tutorial_button.grid(row=0, column=0, columnspan=3, sticky=tk.W)
 
 # 定义按钮点击事件
 def show_cookie_tutorial(parent):
-    # 创建一个新窗口
-    top = tk.Toplevel(parent)
-    top.title("Cookie获取教程")
+    # 创建新窗口
+    tutorial_window = tk.Toplevel(parent)
+    tutorial_window.title("订场教程")
 
-    # 加载图片
-    img = Image.open("cookie获取.png")
-    photo = ImageTk.PhotoImage(img)
+    # 创建文本框
+    text = tk.Text(tutorial_window, height=10, width=50)
+    text.pack()
 
-    # 根据图片大小调整窗口大小
-    top.geometry(f"{img.width}x{img.height}")
-
-    # 在新窗口中显示图片
-    label = tk.Label(top, image=photo)
-    label.image = photo  # 保持对图片的引用
-    label.pack()
-
+    # 显示文本内容
+    text.insert(tk.END, "1、输入所需参数\n")
+    text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
+    text.insert(tk.END, "3、运行后不要关闭窗口\n")
 
 
 # 创建输入字段
-ttk.Label(root, text="学号:").grid(row=0, column=0, sticky=tk.W)
-ttk.Entry(root, textvariable=username_var).grid(row=0, column=1)
+ttk.Label(root, text="学号:").grid(row=1, column=0, sticky=tk.W)
+ttk.Entry(root, textvariable=username_var).grid(row=1, column=1)
 username_var.set("")
 
 # 创建输入字段
-ttk.Label(root, text="密码:").grid(row=1, column=0, sticky=tk.W)
-ttk.Entry(root, textvariable=password_var,show="*").grid(row=1, column=1)
+ttk.Label(root, text="密码:").grid(row=2, column=0, sticky=tk.W)
+ttk.Entry(root, textvariable=password_var,show="*").grid(row=2, column=1)
 password_var.set("")
 
-# 创建输入字段
-ttk.Label(root, text="Cookie 字符串:").grid(row=2, column=0, sticky=tk.W)
-ttk.Entry(root, textvariable=cookie_str_var).grid(row=2, column=1)
-cookie_str_var.set("")
+# # 创建输入字段
+# ttk.Label(root, text="Cookie 字符串:").grid(row=2, column=0, sticky=tk.W)
+# ttk.Entry(root, textvariable=cookie_str_var).grid(row=2, column=1)
+# cookie_str_var.set("")
 
 ttk.Label(root, text="订场时间:").grid(row=3, column=0, sticky=tk.W)
 book_time_combobox = ttk.Combobox(root, textvariable=book_time_var, values=["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00", "20:00-21:00", "21:00-22:00"])
@@ -154,9 +150,9 @@ ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W)
 ttk.Entry(root, textvariable=run_time_var).grid(row=5, column=1)
 run_time_var.set("12:30:00")
 
-ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
-ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
-YYRGH_var.set("")
+# ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
+# ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
+# YYRGH_var.set("")
 
 ttk.Label(root, text="姓名:").grid(row=7, column=0, sticky=tk.W)
 ttk.Entry(root, textvariable=YYRXM_var).grid(row=7, column=1)
@@ -169,7 +165,7 @@ LXFS_var.set("")
 ttk.Checkbutton(root, text="设定运行时间", variable=run_script_var).grid(row=9, column=0, sticky=tk.W)
 run_script_var.set(True)
 
-ttk.Label(root, text="version1.0 coding by @ ", anchor="center").grid(row=12, column=0, sticky=tk.W)
+ttk.Label(root, text="version1.1 coding by @ ", anchor="center").grid(row=12, column=0, sticky=tk.W, columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -245,7 +241,7 @@ def submit_action():
     book_time = book_time_var.get()
     book_day = book_day_var.get()
     run_time = run_time_var.get()
-    YYRGH = YYRGH_var.get()
+    YYRGH = username_var.get()
     YYRXM = YYRXM_var.get()
     LXFS = LXFS_var.get()
 
