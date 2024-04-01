@@ -262,30 +262,6 @@ button3 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPA
 button3.click()
 
 
-# 选择场地
-# area = 26
-# A6 = '//*[@id="apply"]/div[3]/div[10]/div[4]/label/div[2]'
-# B6 = '//*[@id="apply"]/div[3]/div[10]/div[10]/label/div[2]'
-# C6 = '//*[@id="apply"]/div[3]/div[10]/div[18]/label/div[2]'
-# D6 = '//*[@id="apply"]/div[3]/div[10]/div[26]/label/div[2]'
-
-# xpath4 = '//*[@id="apply"]/div[3]/div[10]/div[' + str(area) + ']/label/div[2]'
-# button4 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath4)))
-# button4.click()
-
-# 足球：'//*[@id="apply"]/div[3]/div[10]/div/label/div[2]'
-# 羽毛球：'//*[@id="apply"]/div[3]/div[6]/div/label/div[2]'
-
-# # 找到所有匹配的元素
-# elements = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="apply"]/div[3]/div[10]/div/label/div[2]')))
-
-# # 过滤出可点击的元素
-# clickable_elements = [element for element in elements if element.is_enabled() and element.is_displayed()]
-# # 过滤出不可点击的元素
-# unclickable_elements = [element for element in elements if not element.is_enabled() or not element.is_displayed()]
-# print('不可点击:',unclickable_elements,'\n')
-# print('可点击:',clickable_elements,'\n')
-
 
 # 创建一个requests.session对象
 session = requests.Session()
@@ -304,6 +280,9 @@ print('session的值', '键名:', session.cookies.keys(), 'value值:', session.c
 cookies_str = '; '.join([f"{cookie.name}={cookie.value}" for cookie in session.cookies])
 print('\n','已经拼接：',cookies_str)
 time.sleep(300)
+
+
+
 
 # 随机选择一个元素进行点击
 # random.choice(clickable_elements).click()

@@ -22,9 +22,9 @@ from datetime import datetime
 # 7 手机号
 
 # ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败；若需要抢场，最好在当天12点左右从网站获取并更新下面的cookie--------------
-cookie_str = 'EMAP_LANG=zh; _WEU=5Z3rk7wKaaZP4P7arCIYNoqgtZZcruv86mi8x1Ec6V5I8fuIe3HMb*nU_ubcrR3JCtQrSncoNhuX8WI9lzIMVhYDw67LIfCTvxfd7SXcGV4pCQfoAV6jE*hwNUMRWMbD3UqRrHlLFmhN*aaPiFM6VNglNNz2fHZQdPUoADLEDpyecqqOrdoGiWKkq3wyOL_Ejj1ECu*M68clxPCuIohPkj..; amp.locale=undefined; MOD_AUTH_CAS=MOD_AUTH_ST-822361-4SZpwmhdhhPUzeNLf9e91711686144602-fvKD-cas; asessionid=ac12a6be-ffc0-4230-bce5-302f5bc58e54; route=c74f3c8250d849c2cfd6230ee3f779bd'
+cookie_str = 'asessionid=272758b1-b6f0-4228-b848-f9cfd8d591fe; MOD_AUTH_CAS=MOD_AUTH_ST-1048032-odh1K0BGdoAv9ajCsvJN1711981342351-n3kw-cas; route=f9bb7d1dbb51bc04862ec2b9cddaff48; _WEU=rWd6LejdnGMl2Pv1tt8d3*pU5gKpL2aLZxA_Kw**OdMN5mFePxX3gzADeJLGqZfrgVOHDBJl6n_7GXIbSlmyGSgju3tQ*crTwiqD6JWW00WTckP_pH3Lrc2ca45FtsLcH4pmiUmGYqyZAxGDDn8H_d7Mg2UoQdD2m0PmP1RI_x6bEZw0w*DA*rO9JMBvIyN3niGtSLG*EqG.; EMAP_LANG=zh'
 book_time = "21:00-22:00"
-book_day = "2024-03-30"
+book_day = "2024-04-01"
 run_time = "12:30:05"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
@@ -344,11 +344,11 @@ if __name__ == "__main__":
     # get_login_cookies(username, password, login_url)
 
     # 设定运行时间，测试时可注释掉，可即刻运行
-    runScriptTime(run_time)
+    # runScriptTime(run_time)
     # 入口函数
-    startRun()
+    # startRun()
 
     # 下列代码，用于测试，一般情况下注释下面的代码
     # bookRoom("7981ade524bd4b1ab92d3a622fb0d3af")
-    # getTimeList()
+    getTimeList()
     # getOpeningRoom()
