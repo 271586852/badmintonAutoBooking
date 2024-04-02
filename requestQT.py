@@ -247,9 +247,33 @@ def submit_action():
 
     root.withdraw()
 
+    # 判断run_script_var.get()是否为真
+    # 若为真，判断当前时间离运行时间是否小于180秒，当小于180秒时，直接运行get_login_cookies函数
+    # 若为假，直接运行get_login_cookies函数
 
-    get_login_cookies(username, password)
-    print('cookie_str',cookies_str)
+
+    if run_script_var.get() == True:
+        beijing_tz = pytz.timezone('Asia/Shanghai')
+        current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
+        
+
+        if current_time >= start_time:
+            print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
+            return
+        
+        start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
+        current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
+        remaining_seconds = start_time_seconds - current_time_seconds
+        print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
+        if remaining_seconds < 300:
+            get_login_cookies(username, password)
+    else:
+        get_login_cookies(username, password)
+    
+
+
+    # get_login_cookies(username, password)
+    # print('cookie_str',cookies_str)
 
     # cookie_str = 'EMAP_LANG=zh; _WEU=rRRwyrCKKMI23PHd5YPOTIEWeqX9PxqH155eG14O69G5FqbO_B9NvocYb5cEqH34y*7wQasWUhNcPhU_AmqklzwN3jjZogVMGphYJhVagcrNDj*fbi3vZkyOlfKpcSyI0pi9jO7IuD0z9T*bPdX1tYmU5zd1koJyouGqEJ5anywd2Mz3sFCEW9srRMmEXLoFjXbhWANexkE5iyVhjacwbj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; asessionid=8fcaa73d-8de8-48a6-b300-7ec2cea60917; route=f9bb7d1dbb51bc04862ec2b9cddaff48; MOD_AUTH_CAS=MOD_AUTH_ST-259230-oPCkHFTFfQYrz1dmqSaa1709438447447-n3kw-cas'
 
@@ -292,12 +316,13 @@ def submit_action():
     print(f"预定日期：{book_day}, 预定时间：{book_timeKS}")
     # 根据用户选择执行
     print('run_script_var',run_script_var.get())
-
+    root.withdraw()
     if run_script_var.get():
         runScriptTime(run_time)
         startRun()
     else:
         startRun()
+
 
 
 
@@ -646,8 +671,8 @@ def runScriptTime(start_time,is_restarted=False):
     current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
 
     # 打印北京时间
-    print('currentTime',current_time)
-    print('startTime',start_time)
+    # print('currentTime',current_time)
+    # print('startTime',start_time)
     
     if current_time >= start_time:
         print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
