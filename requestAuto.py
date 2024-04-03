@@ -116,9 +116,9 @@ def show_cookie_tutorial(parent):
     text.pack()
 
     # 显示文本内容
-    text.insert(tk.END, "1、当天抢场前一个小时\n")
+    text.insert(tk.END, "1、最好当天抢场前一个小时内运行本脚本\n")
     text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
-    text.insert(tk.END, "3、运行后不要关闭窗口\n")
+    text.insert(tk.END, "3、运行后会弹出浏览器,不要关闭窗口\n")
 
 
 # 创建输入字段
@@ -163,7 +163,7 @@ ttk.Label(root, text="手机号:").grid(row=8, column=0, sticky=tk.W)
 ttk.Entry(root, textvariable=LXFS_var).grid(row=8, column=1)
 LXFS_var.set("")
 
-ttk.Checkbutton(root, text="设定运行时间", variable=run_script_var).grid(row=9, column=0, sticky=tk.W)
+ttk.Checkbutton(root, text="定时运行", variable=run_script_var).grid(row=9, column=0, sticky=tk.W)
 run_script_var.set(True)
 
 ttk.Label(root, text="version1.1 coding by @ ", anchor="center").grid(row=12, column=0, sticky=tk.W, columnspan=2)
@@ -234,7 +234,7 @@ root.protocol("WM_DELETE_WINDOW", root.quit)
 
 # 定义提交按钮的动作
 def submit_action():
-    global start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time,YYRGH,YYRXM,LXFS,username, password,cookies_str,cookies
+    global start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time,YYRGH,YYRXM,LXFS,username, password,cookies_str,cookies,run_time
     # 获取用户输入
     username = username_var.get()
     password = password_var.get()
@@ -509,7 +509,7 @@ def getOpeningRoom():
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber,YYRGH,YYRXM,LXFS
 
-    print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+    # print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
         re.raise_for_status()
@@ -591,19 +591,21 @@ def get_login_cookies(username, password,callback):
     # 访问要登录的页面
     driver.get("https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do#/sportVenue")
 
-    # time.sleep(50)
-
-    # book_day = "2024-03-06"
+    
 
     # 查找页面的用户名和密码输入框，并输入对应的值
-
-    username_input = driver.find_element(By.XPATH, "//*[@id='username']")
+    username_input = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//*[@id='username']")))    
     username_input.clear()
     username_input.send_keys(username)
 
     password_input = driver.find_element(By.XPATH,"//*[@id='password']")
     password_input.clear()
     password_input.send_keys(password)
+
+   
+    checkbox_xpath = '//*[@id="casLoginForm"]/p[4]/div'
+    checkbox = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
+    checkbox.click()
 
     # 查找登录按钮，点击进行登录
     login_button = driver.find_element(By.XPATH,"//*[@id='casLoginForm']/p[5]/button")
@@ -669,17 +671,17 @@ def get_login_cookies(username, password,callback):
     # 获取登录cookies
     saveCookies = driver.get_cookies()
     c = saveCookies[0]['value']
-    print(saveCookies)
+    # print(saveCookies)
     # 将cookies设置到session中
     for cookie in saveCookies:
         session.cookies.set(cookie['name'],cookie['value'])
-    print('session的值', '键名:', session.cookies.keys(), 'value值:', session.cookies.values())
+    # print('session的值', '键名:', session.cookies.keys(), 'value值:', session.cookies.values())
 
     # cookies_str = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in session.cookies])
     cookies_str = '; '.join([f"{cookie.name}={cookie.value}" for cookie in session.cookies])
-    print('\n','已经拼接：',cookies_str)
+    print('\n','已经拼接cookies：',cookies_str)
     cookies = {item.split("=")[0]: item.split("=")[1] for item in cookies_str.split("; ") if "=" in item}
-    print('cookies',cookies)
+    # print('cookies',cookies)
 
     if cookies != 0:
         success = True  # 假设成功获取 cookies
@@ -728,7 +730,7 @@ def runScriptTime(start_time,is_restarted=False):
 
 
 def startRun():
-    print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
+    print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
 
     getTimeList()
     # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
