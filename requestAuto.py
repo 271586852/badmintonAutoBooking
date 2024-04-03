@@ -149,7 +149,7 @@ ttk.Entry(root, textvariable=book_day_var).grid(row=4, column=1)
 
 ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W)
 ttk.Entry(root, textvariable=run_time_var).grid(row=5, column=1)
-run_time_var.set("12:30:01")
+run_time_var.set("12:30:02")
 
 # ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
 # ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
@@ -442,12 +442,16 @@ def bookRoom(availableRoom):
                     getTimeList()
                     return False
             
+            if "该预约日期暂未开放预约" in re.text:
+                print("该预约日期暂未开放预约")
+                return False    
+
             if "您已预约" in re.text:
                 print("您已预约")
                 return False
             
     except requests.RequestException as e:
-        print(f"请求错误: {e}")
+        print(f"bookRoomError: {e}")
         bookRoomNumber += 1
         if bookRoomNumber < 3:
             time.sleep(1.2)
@@ -489,16 +493,22 @@ def getOpeningRoom():
                 return False
         
         except json.JSONDecodeError:
-            print("无效的 JSON 数据: ", re.text)
+            print("getOpeningRoomError: ", re.text)
             getOpeningRoomNumber += 1
+            if "该预约日期暂未开放预约" in re.text:
+                print("该预约日期暂未开放预约")
+                return False    
             if getOpeningRoomNumber < 3:
                 time.sleep(1.2)
                 getOpeningRoom()
             return False
  
     except requests.RequestException as e:
-        print(f"请求错误: {e}")
+        print(f"getOpeningRoomError: {e}")
         getOpeningRoomNumber += 1
+        if "该预约日期暂未开放预约" in re.text:
+            print("该预约日期暂未开放预约")
+            return False   
         if getOpeningRoomNumber < 3:
             time.sleep(1.2)
             getOpeningRoom()
@@ -561,16 +571,22 @@ def getTimeList():
                 return False
                 
         except json.JSONDecodeError:
-            print("无效的 JSON 数据: ", re.text)
+            print("getTimelistError: ", re.text)
             getTimeListNumber += 1
+            if "该预约日期暂未开放预约" in re.text:
+                print("该预约日期暂未开放预约")
+                return False   
             if getTimeListNumber < 5:
                 time.sleep(1.2)
                 getTimeList()
             return False
  
     except requests.RequestException as e:
-        print(f"请求错误: {e}")
+        print(f"getTimelistError: {e}")
         getTimeListNumber += 1
+        if "该预约日期暂未开放预约" in re.text:
+            print("该预约日期暂未开放预约")
+            return False   
         if getTimeListNumber < 5:
             time.sleep(1.2)
             getTimeList()
@@ -614,7 +630,7 @@ def get_login_cookies(username, password,callback):
     time.sleep(3)
 
     # 等待[@id="sportVenue"]/div[1]/div/div[1]出现
-    area_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[1]/div/div[1]')))
+    area_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[1]/div/div[1]')))
     area_button.click()
 
     badminton_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/img')))
