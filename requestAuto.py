@@ -18,6 +18,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import requests
+import re
+import tkinter.messagebox as messagebox
+
 
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
@@ -103,7 +106,11 @@ run_script_var = tk.BooleanVar()
 
 # 创建按钮
 tutorial_button = ttk.Button(root, text="订场教程", command=lambda: show_cookie_tutorial(root))
-tutorial_button.grid(row=0, column=0, columnspan=3, sticky=tk.W)
+tutorial_button.grid(row=0, column=0, columnspan=2, pady=2)
+
+
+# poem_button = ttk.Button(root, text="切换诗词", command=change_poem)
+# poem_button.grid(row=11, column=0, columnspan=2, pady=10)
 
 # 定义按钮点击事件
 def show_cookie_tutorial(parent):
@@ -122,51 +129,91 @@ def show_cookie_tutorial(parent):
 
 
 # 创建输入字段
-ttk.Label(root, text="学号:").grid(row=1, column=0, sticky=tk.W)
+ttk.Label(root, text="学号:").grid(row=1, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=username_var).grid(row=1, column=1)
 username_var.set("")
 
 # 创建输入字段
-ttk.Label(root, text="密码:").grid(row=2, column=0, sticky=tk.W)
-ttk.Entry(root, textvariable=password_var,show="*").grid(row=2, column=1)
+ttk.Label(root, text="密码:").grid(row=2, column=0, sticky=tk.W, padx=7)
+password_entry = ttk.Entry(root, textvariable=password_var, show="*")
+password_entry.grid(row=2, column=1)
 password_var.set("")
+
+# 创建眼镜按钮
+show_password = tk.BooleanVar()
+show_password.set(False)
+
+def toggle_password_visibility():
+    if show_password.get():
+        password_entry.config(show="")
+    else:
+        password_entry.config(show="*")
+
+password_button = ttk.Checkbutton(root, text="", variable=show_password, command=toggle_password_visibility)
+password_button.grid(row=2, column=2, sticky=tk.W)
 
 # # 创建输入字段
 # ttk.Label(root, text="Cookie 字符串:").grid(row=2, column=0, sticky=tk.W)
 # ttk.Entry(root, textvariable=cookie_str_var).grid(row=2, column=1)
 # cookie_str_var.set("")
 
-ttk.Label(root, text="订场时间:").grid(row=3, column=0, sticky=tk.W)
+ttk.Label(root, text="订场时间:").grid(row=3, column=0, sticky=tk.W, padx=7)
 book_time_combobox = ttk.Combobox(root, textvariable=book_time_var, values=["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00", "20:00-21:00", "21:00-22:00"])
 book_time_combobox.grid(row=3, column=1)
 book_time_var.set("20:00-21:00")
 
-ttk.Label(root, text="订场日期:").grid(row=4, column=0, sticky=tk.W)
+ttk.Label(root, text="订场日期:").grid(row=4, column=0, sticky=tk.W, padx=7)
 current_date = dt.date.today()
 next_date = current_date + dt.timedelta(days=1)
 book_day_var.set(next_date.strftime("%Y-%m-%d"))
 ttk.Entry(root, textvariable=book_day_var).grid(row=4, column=1)
 
-ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W)
+ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=run_time_var).grid(row=5, column=1)
-run_time_var.set("12:30:02")
+run_time_var.set("12:30:03")
 
 # ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
 # ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
 # YYRGH_var.set("")
 
-ttk.Label(root, text="姓名:").grid(row=7, column=0, sticky=tk.W)
+ttk.Label(root, text="姓名:").grid(row=7, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=YYRXM_var).grid(row=7, column=1)
 YYRXM_var.set("")
 
-ttk.Label(root, text="手机号:").grid(row=8, column=0, sticky=tk.W)
+ttk.Label(root, text="手机号:").grid(row=8, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=LXFS_var).grid(row=8, column=1)
 LXFS_var.set("")
 
-ttk.Checkbutton(root, text="定时运行", variable=run_script_var).grid(row=9, column=0, sticky=tk.W)
+ttk.Checkbutton(root, text="定时运行", variable=run_script_var).grid(row=9, column=0, sticky=tk.W, padx=7)
 run_script_var.set(True)
 
-ttk.Label(root, text="version1.1 coding by @ ", anchor="center").grid(row=12, column=0, sticky=tk.W, columnspan=2)
+poems = [
+    "此身原本不知愁,最怕万一见温柔",
+    "海底月是天上月,眼前人是心上人",
+    "遇事不决,可问春风",
+    "山中何事,松花酿酒,春水煎茶",
+    "江山风月,本无常主,闲者便是主人",
+    "吹灭读书灯,一身都是月",
+    "独立天地间,清风洒兰雪",
+    "天地无尘,山河有影",
+    "人生自是有情痴,此恨不关风与月",
+    "一箫一剑平生意,负尽狂名十五年",
+    "楼上看山;城头看雪;灯前看花;舟中看霞;月下看美人",
+]
+
+# 创建文本和按钮
+poem_label = ttk.Label(root, text=random.choice(poems), anchor="center")
+poem_label.grid(row=11, column=0, columnspan=2, pady=7)
+
+
+def change_poem():
+    # 切换诗词
+    poem_label.config(text=random.choice(poems))
+
+poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
+poem_button.grid(row=12, column=0, columnspan=2)
+
+ttk.Label(root, text="version1.2 coding by @ ", anchor="center").grid(row=13, column=0, sticky=tk.W, columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -245,6 +292,45 @@ def submit_action():
     YYRGH = username_var.get()
     YYRXM = YYRXM_var.get()
     LXFS = LXFS_var.get()
+    
+    
+    if not all([username, password, book_time, book_day, run_time, YYRGH, YYRXM, LXFS]):
+        messagebox.showinfo("提示", "请完整输入信息")
+        return
+    
+    # 检测username是否为十位阿拉伯数字
+    if not re.match(r'^\d{10}$', username):
+        messagebox.showinfo("提示", "用户名必须为十位阿拉伯数字")
+        return
+
+    # 检测book_day是否为xxxx-xx-xx
+    if not re.match(r'^\d{4}-\d{2}-\d{2}$', book_day):
+        messagebox.showinfo("提示", "日期格式必须为xxxx-xx-xx")
+        return
+
+    # 检测run_time是否为xx:xx:xx
+    if not re.match(r'^\d{2}:\d{2}:\d{2}$', run_time):
+        messagebox.showinfo("提示", "时间格式必须为xx:xx:xx")
+        return
+    
+    # 检测LXFS是否为11位阿拉伯数字
+    if not re.match(r'^\d{11}$', LXFS):
+        messagebox.showinfo("提示", "手机号必须为11位阿拉伯数字")
+        return
+    
+    # 检测book_time是否为xx:xx-xx:xx
+    if not re.match(r'^\d{2}:\d{2}-\d{2}:\d{2}$', book_time):
+        messagebox.showinfo("提示", "时间格式必须为xx:xx-xx:xx")
+        return
+    
+    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉"]
+    if YYRXM not in authorized_users:
+        messagebox.showinfo("提示","用户未经授权，请联系授权")
+        return
+    
+    
+    # 其他代码...
+
 
     root.withdraw()
 
@@ -755,7 +841,7 @@ def startRun():
 
     
 # 创建提交按钮
-ttk.Button(root, text="提交", command=submit_action).grid(row=10, column=0, columnspan=2)
+ttk.Button(root, text="提交", command=submit_action).grid(row=10, column=0, columnspan=2, pady=10)
 
 # 启动 Tkinter 事件循环
 root.mainloop()
