@@ -203,7 +203,7 @@ poems = [
 
 # 创建文本和按钮
 poem_label = ttk.Label(root, text=random.choice(poems), anchor="center")
-poem_label.grid(row=11, column=0, columnspan=2, pady=7)
+poem_label.grid(row=11, column=0, columnspan=2, )
 
 
 def change_poem():
@@ -211,9 +211,9 @@ def change_poem():
     poem_label.config(text=random.choice(poems))
 
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
-poem_button.grid(row=12, column=0, columnspan=2)
+poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.2 coding by @ ", anchor="center").grid(row=13, column=0, sticky=tk.W, columnspan=2)
+ttk.Label(root, text="version1.2 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
