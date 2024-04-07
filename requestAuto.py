@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Image, ttk
+from tkinter import  ttk
 import requests
 import json
 import time
@@ -8,7 +8,6 @@ import random
 import pytz
 import datetime
 from PIL import Image, ImageTk
-import schedule
 from datetime import datetime
 import datetime as dt
 from selenium.webdriver.support.ui import WebDriverWait
@@ -76,6 +75,8 @@ getOpeningRoom_data = {
     "XQDM": 1
 }
 
+# ------------------------------
+
 accept = "*/*"
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 referer = "https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do"
@@ -87,6 +88,8 @@ urlGetTimeList = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/sportVenue/get
 urlGetOpeningRoom = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/modules/sportVenue/getOpeningRoom.do'
 
 headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cache-Control': 'no-cache'}
+
+# ------------------------------
 
 # 创建窗口
 root = tk.Tk()
@@ -199,6 +202,91 @@ poems = [
     "人生自是有情痴,此恨不关风与月",
     "一箫一剑平生意,负尽狂名十五年",
     "楼上看山;城头看雪;灯前看花;舟中看霞;月下看美人",
+    "中秋明月，豪门有，贫家也有。 极慰人心",
+    "此去泉台招旧部，旌旗十万斩阎罗",
+    "既见君子，云胡不喜",
+    "愿我如星君如月，夜夜流光相皎洁",
+    "酬恩一剑光若虹，结客万金散如土",
+    "投鞭断河洛，挂剑倚崆峒，松舟桧楫乘长风",
+    "宝刀偃月双飞电，紫马嘶云散五花",
+    "醉斩长鲸倚天剑，笑凌骇浪济川舟",
+    "十步杀一人，千里不留行",
+    "事了拂衣去，深藏身与名",
+    "手掷人头笑归坐，锦筵红烛乾百杯",
+    "谁把哀弦开上界，自携长剑倚崆峒",
+    "相逢意气为君饮，系马高楼垂柳边",
+    "流星白羽腰间插，剑花秋莲光出匣",
+    "孰知不向边庭苦，纵死犹闻侠骨香",
+    "恩仇未了剑无光，迫窄乾坤论莫狂",
+    "襄阳走马客，意气自生春",
+    "少年侠气，交结五都雄",
+    "肝胆洞，毛发耸立谈中，死生同",
+    "野夫怒见不平处，磨损胸中万古刀",
+    "斗酒纵谈天下事，宝刀高唱《少年行》",
+    "我不求人富贵，人须求我文章",
+    "风流才子占词场，真是白衣卿相",
+    "驾六龙，乘风而行行四海，路下之八邦",
+    "欲泻三江雪浪，净洗胡尘千里，不用挽天河",
+    "吾将斩龙足，嚼龙肉，使之朝不得回，夜不得伏",
+    "抬眸四顾乾坤阔，日月星辰任我攀",
+    "仰天大笑出门去，我辈岂是蓬蒿人",
+    "神甚放，形如眠鸿鹄一再高举，天地睹方圆",
+    "挟取笔端风雨，快写胸中丘壑，不肯下樊笼",
+    "大笑了今古，乘兴便西东",
+    "一身转战三千里，一剑曾当百万师",
+    "一剑横空星斗寒，甫随平北复征蛮",
+    "冲天香阵透长安，满城尽带黄金甲",
+    "长剑倚天外，白眼举觞空莲花千朵出匣，珠滴小槽红",
+    "浇尽层层块垒，露尽森森芒角，云梦荡吾胸春水变酾醁，秋水淬芙蓉",
+    "自信人生二百年，会当水击三千里",
+    "此去泉台招旧部，旌旗十万斩阎罗",
+    "我欲穿花寻路，直入白云深处，浩气展虹霓",
+    "天下只应我爱，世间唯有君知",
+    "桃李春风一杯酒，江湖夜雨十年灯",
+    "摩挲素月，人世俯仰已千年",
+    "一点浩然气，千里快哉风",
+    "天上白玉京，十二楼五城",
+    "仙人抚我顶，结发受长生",
+    "我来问道无余说，云在青天水在瓶",
+    "梦里有时身化鹤，人间无数草为萤",
+    "浮生暂寄梦中梦，世事如闻风里风",
+    "万里故人能尚尔，知君视听我心同",
+    "醉后不知天在水，满船清梦压星河",
+    "日暮酒醒人已远，满天风雨下西楼",
+    "算好春长在，好花长见，原只是、人憔悴",
+    "浮生只合尊前老，雪满长安道",
+    "杏花疏影里，吹笛到天明",
+    "月上柳梢头，人约黄昏后",
+    "少年自负凌云笔到而今、春华落尽，满怀萧瑟",
+    "密约不明浑梦境，佳期多半待来生",
+    "欲买桂花同载酒，终不似，少年游",
+    "最是人间留不住，朱颜辞镜花辞树",
+    "十年生死两茫茫，不思量，自难忘",
+    "赌书消得泼茶香，当时只道是寻常",
+    "不知何限人间梦，并触沉思到酒边",
+    "死去元知万事空，但悲不见九州同",
+    "物是人非事事休，欲语泪先流",
+    "追往事，叹今吾，春风不染白髭须",
+    "人面不知何处去，桃花依旧笑春风",
+    "此情可待成追忆，只是当时已惘然",
+    "虚道人生归去好，谁知美事难双得",
+    "流光容易把人抛，红了樱桃，绿了芭蕉",
+    "伤心桥下春波绿，曾是惊鸿照影来",
+    "明月直入，无心可猜",
+    "雨晴云梦，月明风袅",
+    "花下归来，带月敲门",
+    "天地无尘，山河有影",
+    "万籁生山，一星在水",
+    "春风花信，秋宵月约",
+    "山光黛浮，帘波月流",
+    "凌波人去，拜月楼空",
+    "拨雪寻春，烧灯续昼",
+    "慢捻幽情，轻拢柔思",
+    "雾失楼台，月迷津渡",
+    "吹香成阵，飞花如雪",
+    "葡萄涨绿，半空烟雨",
+    "毫端月露，皮里阳秋",
+    "半溪明月，一枕清风",
 ]
 
 # 创建文本和按钮
@@ -213,71 +301,10 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.2 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.3 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
-
-
-# # 定义提交按钮的动作
-# def submit_action():
-#     global cookies, start_time, end_time, book_timeKS, book_timeJS, getTimeList_data, getOpeningRoom_data,book_day,book_time,YYRGH,YYRXM,LXFS
-#     # 获取用户输入
-#     cookie_str = cookie_str_var.get()
-#     book_time = book_time_var.get()
-#     book_day = book_day_var.get()
-#     run_time = run_time_var.get()
-#     YYRGH = YYRGH_var.get()
-#     YYRXM = YYRXM_var.get()
-#     LXFS = LXFS_var.get()
-
-
-#     # cookie_str = 'EMAP_LANG=zh; _WEU=rRRwyrCKKMI23PHd5YPOTIEWeqX9PxqH155eG14O69G5FqbO_B9NvocYb5cEqH34y*7wQasWUhNcPhU_AmqklzwN3jjZogVMGphYJhVagcrNDj*fbi3vZkyOlfKpcSyI0pi9jO7IuD0z9T*bPdX1tYmU5zd1koJyouGqEJ5anywd2Mz3sFCEW9srRMmEXLoFjXbhWANexkE5iyVhjacwbj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; asessionid=8fcaa73d-8de8-48a6-b300-7ec2cea60917; route=f9bb7d1dbb51bc04862ec2b9cddaff48; MOD_AUTH_CAS=MOD_AUTH_ST-259230-oPCkHFTFfQYrz1dmqSaa1709438447447-n3kw-cas'
-
-#     # book_time = "19:00-20:00"
-#     # book_day = "2024-03-03"
-#     # run_time = "12:29:00"
-#     # YYRGH = "2310324009"
-#     # YYRXM = "顾仁杰"
-#     # LXFS = "18218196660"
-
-#     # 设置cookies和其他参数
-#     cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
-#     start_time = book_day + " " + book_time.split("-")[0]
-#     end_time = book_day + " " + book_time.split("-")[1]
-#     book_timeKS = book_time.split("-")[0]
-#     book_timeJS = book_time.split("-")[1]
-#     # print(cookies,start_time)
-
-#     # 更新请求数据
-#     getTimeList_data = {
-#         "XQ": 1,
-#         "YYRQ": book_day,
-#         "YYLX": 1.0,
-#         "XMDM": "001"
-#     }
-#     getOpeningRoom_data = {
-#         "XMDM": "001",
-#         "YYRQ": book_day,
-#         "YYLX": 1.0,
-#         "KSSJ": book_timeKS,
-#         "JSSJ": book_timeJS,
-#         "XQDM": 1
-#     }
-
-#     print('submit_action',cookie_str, book_time, book_day, run_time, YYRGH, YYRXM, LXFS)
-
-#     # 输出以确认
-#     print(f"预定日期：{book_day}, 预定时间：{book_timeKS}")
-#     # 根据用户选择执行
-#     print('run_script_var',run_script_var.get())
-#     root.withdraw()
-#     if run_script_var.get():
-#         runScriptTime(run_time)
-#         startRun()
-#     else:
-#         startRun()
-
 
 # 定义提交按钮的动作
 def submit_action():
@@ -323,58 +350,13 @@ def submit_action():
         messagebox.showinfo("提示", "时间格式必须为xx:xx-xx:xx")
         return
     
-    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉"]
+    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕"]
     if YYRXM not in authorized_users:
         messagebox.showinfo("提示","用户未经授权，请联系授权")
         return
     
     
-    # 其他代码...
-
-
     root.withdraw()
-
-    # 判断run_script_var.get()是否为真
-    # 若为真，判断当前时间离运行时间是否小于180秒，当小于180秒时，直接运行get_login_cookies函数
-    # 若为假，直接运行get_login_cookies函数
-
-
-    # if run_script_var.get() == True:
-    #     beijing_tz = pytz.timezone('Asia/Shanghai')
-    #     current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
-        
-
-    #     if current_time >= start_time:
-    #         print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
-    #         return
-        
-    #     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
-    #     current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
-    #     remaining_seconds = start_time_seconds - current_time_seconds
-    #     print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
-    #     if remaining_seconds < 300:
-    #         get_login_cookies(username, password)
-    # else:
-    #     get_login_cookies(username, password)
-
-    # 自动cookies
-    # get_login_cookies(username, password)
-    # print('cookies',cookies)
-
-
-
-    # get_login_cookies(username, password)
-    # print('cookie_str',cookies_str)
-
-    # cookie_str = 'EMAP_LANG=zh; _WEU=rRRwyrCKKMI23PHd5YPOTIEWeqX9PxqH155eG14O69G5FqbO_B9NvocYb5cEqH34y*7wQasWUhNcPhU_AmqklzwN3jjZogVMGphYJhVagcrNDj*fbi3vZkyOlfKpcSyI0pi9jO7IuD0z9T*bPdX1tYmU5zd1koJyouGqEJ5anywd2Mz3sFCEW9srRMmEXLoFjXbhWANexkE5iyVhjacwbj..; loginServiceclassifyId=all; loginServiceroleId=all; loginServiceSearchVal=; loginServiceserchVal=; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C19731%7CMCMID%7C91670754967293786780646029497931279130%7CMCAAMLH-1705326203%7C3%7CMCAAMB-1705326203%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCOPTOUT-1704728603s%7CNONE%7CMCAID%7CNONE%7CvVersion%7C5.5.0%7CMCCIDH%7C1111208270; s_pers=%20v8%3D1704721403137%7C1799329403137%3B%20v8_s%3DMore%2520than%252030%2520days%7C1704723203137%3B%20c19%3Dsd%253Ahome%253Ahpx%7C1704723203139%3B%20v68%3D1704721404542%7C1704723203141%3B; openLoginServicePageFlag=false; amp.locale=undefined; asessionid=8fcaa73d-8de8-48a6-b300-7ec2cea60917; route=f9bb7d1dbb51bc04862ec2b9cddaff48; MOD_AUTH_CAS=MOD_AUTH_ST-259230-oPCkHFTFfQYrz1dmqSaa1709438447447-n3kw-cas'
-
-    # book_time = "19:00-20:00"
-    # book_day = "2024-03-03"
-    # run_time = "12:29:00"
-    # YYRGH = "2310324009"
-    # YYRXM = "顾仁杰"
-    # LXFS = "18218196660"
-
 
 
     start_time = book_day + " " + book_time.split("-")[0]
@@ -419,59 +401,6 @@ def print_callback():
     print("Callback triggered!")
 
 
-# -----------------------下面参数勿修改-----------------------
-# available_rooms = []  # Store the WID of available rooms
-# booked_times = []  # Store the fully booked times
-# getTimeListNumber = 0
-# getOpeningRoomNumber = 0
-
-
-
-# cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ") if "=" in item}
-
-# # cookies = {item.split("=")[0]: item.split("=")[1] for item in cookie_str.split("; ")}
-# start_time = book_day + " " + book_time.split("-")[0]
-# end_time = book_day + " " + book_time.split("-")[1]
-# book_timeKS = book_time.split("-")[0]
-# book_timeJS = book_time.split("-")[1]
-
-
-
-# getTimeList_data = {
-#     "XQ": 1,
-#     "YYRQ": book_day,
-#     "YYLX": 1.0,
-#     "XMDM": "001"
-# }
-
-# getOpeningRoom_data = {
-#     "XMDM": "001",
-#     "YYRQ": book_day,
-#     "YYLX": 1.0,
-#     "KSSJ": book_timeKS,
-#     "JSSJ": book_timeJS,
-#     "XQDM": 1
-# }
-
-
-# ------------------------------
-# accept = "*/*"
-# user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-# referer = "https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do"
-
-# url = "https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/sportVenue/insertVenueBookingInfo.do"
-
-# urlGetTimeList = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/sportVenue/getTimeList.do'
-
-# urlGetOpeningRoom = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/modules/sportVenue/getOpeningRoom.do'
-
-# headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cache-Control': 'no-cache'}
-
-
-# ------------------------------
-
-
-
 def bookRoom(availableRoom):
     global available_rooms,bookRoomNumber
     # print('bookRoom函数',available_rooms)
@@ -514,7 +443,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data,'预约成功，时间为',book_day,book_time,datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
+            print(re_data,'预约成功，场地时间为',book_day,book_time,'抢场时间',datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -723,25 +652,6 @@ def get_login_cookies(username, password,callback):
     badminton_button.click()
 
     time.sleep(3)
-
-
-
-    # # 获取浏览器所有Cookies
-    # all_cookies = driver.get_cookies()
-    # # 根据Cookie名称获取特定Cookie的值
-
-    # jsonCookies = json.dumps(all_cookies)  # 转换成字符串保存
-
-    # with open('damai_cookies.txt', 'w') as f:
-    #     f.write(jsonCookies)
-    # print('cookies保存成功！')
-
-
-    # # 打印Cookies
-    # for cookie in all_cookies:
-    #     print(cookie)
-        
-
 
     xpath0 = '//*[@id="apply"]/div[2]/div[2]/div[3]/div' #方便实时更新和切换
     button0 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath0)))
