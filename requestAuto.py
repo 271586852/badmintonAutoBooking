@@ -501,9 +501,12 @@ def getOpeningRoom():
 
             else:
                 getOpeningRoomNumber += 1
+                if not available_rooms:
+                    print('无剩余空场')
+                # print('re.text',re.text)
                 if getOpeningRoomNumber < 5:
                     time.sleep(1.2)
-                    print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
+                    # print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
                 return False
         
@@ -548,17 +551,27 @@ def getTimeList():
             print(book_day,'可预约时间为',booked_times,'\n')
             
             if booked_times:
+
                 if book_time not in booked_times:
+
                     if "19:00-20:00" in booked_times:
                         book_time = "19:00-20:00"
                     elif "20:00-21:00" in booked_times:
                         book_time = "20:00-21:00"
-                    elif "18:00-19:00" in booked_times:
-                        book_time = "18:00-19:00"
-                    elif "17:00-18:00" in booked_times:
-                        book_time = "17:00-18:00"
                     elif "21:00-22:00" in booked_times:
                         book_time = "21:00-22:00"
+                    elif "18:00-19:00" in booked_times:
+                        book_time =  "18:00-19:00"
+                    elif "17:00-18:00" in booked_times:
+                        book_time = "17:00-18:00"
+                    elif "16:00-17:00" in booked_times:
+                        book_time = "16:00-17:00"
+                    elif "08:00-09:00" in booked_times:
+                        booked_times.remove("08:00-09:00")
+                        print('移除早上8-9点场地')
+                    elif "09:00-10:00" in booked_times:
+                        booked_times.remove("09:00-10:00")
+                        print('移除早上9-10点场地')
                     else:
                         book_time = random.choice(booked_times)
 
@@ -579,9 +592,14 @@ def getTimeList():
                 
             else:
                 getTimeListNumber += 1
+                if not booked_times:
+                    print("无剩余开放时间")
+
+                # print("re.text",re.text)
                 if getTimeListNumber < 5:
                     time.sleep(1.2)
-                    print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
+                    
+                    # print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
                 
