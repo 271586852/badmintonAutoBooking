@@ -129,6 +129,8 @@ def show_cookie_tutorial(parent):
     text.insert(tk.END, "1、最好当天抢场前一个小时内运行本脚本\n")
     text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
     text.insert(tk.END, "3、运行后会弹出浏览器,不要关闭窗口\n")
+    text.insert(tk.END, "4、可以同时打开多个本程序,预约多个场地\n")
+
 
 
 # 创建输入字段
@@ -634,6 +636,8 @@ def get_login_cookies(username, password,callback):
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--v=1")
 
+    print('等待浏览器启动,勿关闭窗口')
+
     # 启动浏览器
     driver = webdriver.Chrome()
 
@@ -693,7 +697,7 @@ def get_login_cookies(username, password,callback):
         button2 = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath2)))
         button2.click()
 
-
+    
     # 创建一个requests.session对象
     session = requests.Session()
     agent = driver.execute_script("return navigator.userAgent")
@@ -701,7 +705,6 @@ def get_login_cookies(username, password,callback):
     # 获取登录cookies
     saveCookies = driver.get_cookies()
     c = saveCookies[0]['value']
-    # print(saveCookies)
     # 将cookies设置到session中
     for cookie in saveCookies:
         session.cookies.set(cookie['name'],cookie['value'])
@@ -709,7 +712,7 @@ def get_login_cookies(username, password,callback):
 
     # cookies_str = '; '.join([f"{cookie['name']}={cookie['value']}" for cookie in session.cookies])
     cookies_str = '; '.join([f"{cookie.name}={cookie.value}" for cookie in session.cookies])
-    print('\n','已经拼接cookies：',cookies_str)
+    print('\n','已经获取cookies,','关闭浏览器')
     cookies = {item.split("=")[0]: item.split("=")[1] for item in cookies_str.split("; ") if "=" in item}
     # print('cookies',cookies)
 
