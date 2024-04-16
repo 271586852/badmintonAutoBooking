@@ -458,6 +458,7 @@ def bookRoom(availableRoom):
                     print(book_day,book_time,"这个时间段已经没空场了")
                     getTimeList()
                     return False
+                
             
             if "该预约日期暂未开放预约" in re.text:
                 print("该预约日期暂未开放预约")
@@ -465,6 +466,10 @@ def bookRoom(availableRoom):
 
             if "您已预约" in re.text:
                 print("您已预约")
+                return False
+            
+            if not "您已预约" in re.text:
+                print("bookRoomError: ", re.text)
                 return False
             
     except requests.RequestException as e:
