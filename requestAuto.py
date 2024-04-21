@@ -46,11 +46,11 @@ def get_network_beijing_time_formatted(server='pool.ntp.org'):
     except Exception as e:
         return f"Failed to get network time: {e}"
 
-print(get_network_beijing_time_formatted())
+# print(get_network_beijing_time_formatted())
 
 
 # 初始化全局变量
-current_time = get_network_beijing_time_formatted()
+# current_time = get_network_beijing_time_formatted()
 available_rooms = []
 cookie_str = ''
 remaining_seconds = 0
@@ -470,7 +470,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data,'预约成功，场地时间为',book_day,book_time,'抢场时间',datetime.now().strftime("%Y-%m-%d %H:%M:%S"),'\n')
+            print(re_data,'预约成功，场地时间为',book_day,book_time,'抢场时间',get_network_beijing_time_formatted(),'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -763,15 +763,18 @@ def get_login_cookies(username, password,callback):
 def runScriptTime(start_time,is_restarted=False):
     global remaining_seconds
     # 获取当前的北京时间
-    beijing_tz = pytz.timezone('Asia/Shanghai')
-    current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
+    # beijing_tz = pytz.timezone('Asia/Shanghai')
+    # current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
 
     # 打印北京时间
     # print('currentTime',current_time)
     # print('startTime',start_time)
     
+    current_time = get_network_beijing_time_formatted()
+    print("当前时间：", current_time)
+
     if current_time >= start_time:
-        print("已经过了指定的开始时间。", datetime.now(beijing_tz).strftime("%H:%M:%S"))
+        print("已经过了指定的开始时间。",get_network_beijing_time_formatted())
         return
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
@@ -780,11 +783,9 @@ def runScriptTime(start_time,is_restarted=False):
     
     print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
 
-
-
     while remaining_seconds > 0:
         print(f"剩余时间：{remaining_seconds} 秒", end="\r")
-        time.sleep(0.95)
+        time.sleep(1)
         remaining_seconds -= 1
         # 如果剩余时间小于180秒，且未重启，调用get_login_cookies()
         if remaining_seconds < 180 and not is_restarted:
@@ -792,7 +793,7 @@ def runScriptTime(start_time,is_restarted=False):
             print(f"剩余时间小于180秒，重新开始计时。")
             runScriptTime(start_time, is_restarted=True)
     
-    print("开始运行程序！", datetime.now(beijing_tz).strftime("%H:%M:%S"), '\n')
+    print("开始运行程序！", get_network_beijing_time_formatted(), '\n')
 
 
 
