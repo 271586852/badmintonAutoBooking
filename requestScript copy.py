@@ -22,9 +22,9 @@ from datetime import datetime
 # 7 手机号
 
 # ----------cookie_str自行从浏览器中获取，cookie存在有效期，过期后需要重新获取，否则将预约失败；若需要抢场，最好在当天12点左右从网站获取并更新下面的cookie--------------
-cookie_str = 'EMAP_LANG=zh; _WEU=g8Egn9Hk*1*sZZMyov3P340W*kaV9AkU*cVssJ_v1CHfPCIR_G6WrTVHALyb7BIHU1FE7UtzY7rwlEenzOBL8ltOU_MnFupTsYFkMvSOqdUX2aJdu*mxHsi7QRKOrrLpID7zRHk*D0LXq*LH13gn*RNeKrh_ZcKtPVwKbXpEfRsX48O7OqJyq7XCeWTovnIlY9UhxdxmLslKCGTllFA4Mo..; amp.locale=undefined; asessionid=3a681b71-4757-4100-8fed-80f8e28ee7f1; route=c74f3c8250d849c2cfd6230ee3f779bd; MOD_AUTH_CAS=MOD_AUTH_ST-910731-DaVneoBudySjeZPmEu9i1712108882013-dSJ7-cas'
+cookie_str = 'EMAP_LANG=zh; _WEU=XMCRByurEmZURLfJCVhwz57S47isny65I4id*VMafy1lP9t7EnugYFwtXg4AcEAYBAFIyji1DiJA4SjLTZsqUsd_1BGtvLyWfpt6qAh5H_YZahLanJOZYFHgVvekDL0ahvic53*aaoair6X04c*f3wViEyNXLUwB9tMT4HztTdK4HUw4ax0sXUYhE8Bk3cVgLS479e2rPXQZ*9_3yTRSXH*vpyiVRyikR_qwd5J61X_DoP2sLYyy9xqs5c5LQtGQ; amp.locale=undefined; asessionid=d9d94bed-75f0-432b-a8b2-f82a3d1695cb; route=6fcc95effda7818ac250c10acfaab6fc; MOD_AUTH_CAS=MOD_AUTH_ST-1249562-cqaGWW1iFdofWHo0IBEY1713502785915-dSJ7-cas'
 book_time = "21:00-22:00"
-book_day = "2024-04-03"
+book_day = "2024-04-20"
 run_time = "12:30:05"
 YYRGH = "2310324009"
 YYRXM = "顾仁杰"
@@ -147,7 +147,7 @@ def bookRoom(availableRoom):
     except requests.RequestException as e:
         print(f"请求错误: {e}")
         bookRoomNumber +1
-        if available_rooms and bookRoomNumber<5:
+        if available_rooms and bookRoomNumber< 800:
             bookRoom(available_rooms)
         return False
     
@@ -179,7 +179,7 @@ def getOpeningRoom():
 
             else:
                 getOpeningRoomNumber += 1
-                if getOpeningRoomNumber < 5:
+                if getOpeningRoomNumber < 800:
                     time.sleep(0.2)
                     print('调用第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
@@ -188,7 +188,7 @@ def getOpeningRoom():
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
             getOpeningRoomNumber += 1
-            if getOpeningRoomNumber < 3:
+            if getOpeningRoomNumber < 800:
                 time.sleep(0.2)
                 getOpeningRoom()
             return False
@@ -196,7 +196,7 @@ def getOpeningRoom():
     except requests.RequestException as e:
         print(f"请求错误: {e}")
         getOpeningRoomNumber += 1
-        if getOpeningRoomNumber < 3:
+        if getOpeningRoomNumber < 800:
             time.sleep(0.2)
             getOpeningRoom()
         return False
@@ -260,7 +260,7 @@ def getTimeList():
                 
             else:
                 getTimeListNumber += 1
-                if getTimeListNumber < 5:
+                if getTimeListNumber < 800:
                     time.sleep(0.2)
                     print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
@@ -269,7 +269,7 @@ def getTimeList():
         except json.JSONDecodeError:
             print("无效的 JSON 数据: ", re.text)
             getTimeListNumber += 1
-            if getTimeListNumber < 5:
+            if getTimeListNumber < 800:
                 time.sleep(0.2)
                 getTimeList()
             return False
@@ -277,7 +277,7 @@ def getTimeList():
     except requests.RequestException as e:
         print(f"请求错误: {e}")
         getTimeListNumber += 1
-        if getTimeListNumber < 5:
+        if getTimeListNumber < 800:
             time.sleep(0.2)
             getTimeList()
         return False  

@@ -20,7 +20,8 @@ import requests
 import re
 import tkinter.messagebox as messagebox
 
-
+import ntplib
+from datetime import datetime, timedelta, timezone
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
 # 1 cookies参数 cookie_str自行从浏览器中获取 
@@ -32,7 +33,24 @@ import tkinter.messagebox as messagebox
 # 7 手机号
 
 
+
+
+def get_network_beijing_time_formatted(server='pool.ntp.org'):
+    try:
+        client = ntplib.NTPClient()
+        response = client.request(server, version=3)
+        utc_time = datetime.fromtimestamp(response.tx_time, timezone.utc)
+        beijing_time = utc_time + timedelta(hours=8)
+        # Format the datetime object to only show time
+        return beijing_time.strftime('%H:%M:%S')
+    except Exception as e:
+        return f"Failed to get network time: {e}"
+
+print(get_network_beijing_time_formatted())
+
+
 # 初始化全局变量
+current_time = get_network_beijing_time_formatted()
 available_rooms = []
 cookie_str = ''
 remaining_seconds = 0
@@ -115,6 +133,8 @@ tutorial_button.grid(row=0, column=0, columnspan=2, pady=2)
 # poem_button = ttk.Button(root, text="切换诗词", command=change_poem)
 # poem_button.grid(row=11, column=0, columnspan=2, pady=10)
 
+
+
 # 定义按钮点击事件
 def show_cookie_tutorial(parent):
     # 创建新窗口
@@ -175,7 +195,7 @@ ttk.Entry(root, textvariable=book_day_var).grid(row=4, column=1)
 
 ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=run_time_var).grid(row=5, column=1)
-run_time_var.set("12:30:03")
+run_time_var.set("12:30:02")
 
 # ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
 # ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
@@ -352,7 +372,7 @@ def submit_action():
         messagebox.showinfo("提示", "时间格式必须为xx:xx-xx:xx")
         return
     
-    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕"]
+    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕","邓志钢"]
     if YYRXM not in authorized_users:
         messagebox.showinfo("提示","用户未经授权，请联系授权")
         return
@@ -397,6 +417,11 @@ def submit_action():
     else:
         get_login_cookies(username, password,startRun)
         # startRun()
+
+
+
+
+
 
 
 def print_callback():
@@ -453,33 +478,25 @@ def bookRoom(availableRoom):
                 availableRoom.remove(Room)
                 print("移除后的",len(available_rooms))
                 if availableRoom:
-                    bookRoom(availableRoom)  
+                    bookRoom(availableRoom)
                 else:
-                    print(book_day,book_time,"这个时间段已经没空场了")
+                    print(book_day,book_time,re.text)
                     getTimeList()
                     return False
                 
-            
-            if "该预约日期暂未开放预约" in re.text:
-                print("该预约日期暂未开放预约")
-                return False    
 
             if "您已预约" in re.text:
                 print("您已预约")
                 return False
-            
-            if not "您已预约" in re.text:
-                print("bookRoomError: ", re.text)
-                return False
+
             
     except requests.RequestException as e:
         print(f"bookRoomError: {e}")
         bookRoomNumber += 1
-        if bookRoomNumber < 3:
-            time.sleep(1.2)
-            bookRoom(availableRoom)        
+        if bookRoomNumber < 60:
+            time.sleep(0.95)
+            bookRoom(availableRoom)
         return False
-    
     print('bookRoom调用结束')
     
 def getOpeningRoom():
@@ -511,31 +528,35 @@ def getOpeningRoom():
                 if not available_rooms:
                     print('无剩余空场')
                 # print('re.text',re.text)
-                if getOpeningRoomNumber < 5:
-                    time.sleep(1.2)
+                if getOpeningRoomNumber < 60:
+                    time.sleep(0.95)
                     # print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
                 return False
         
         except json.JSONDecodeError:
             print("getOpeningRoomError: ", re.text)
+
             getOpeningRoomNumber += 1
-            if "该预约日期暂未开放预约" in re.text:
-                print("该预约日期暂未开放预约")
-                return False    
-            if getOpeningRoomNumber < 3:
-                time.sleep(1.2)
+
+            if getOpeningRoomNumber < 60:
+                time.sleep(0.95)
                 getOpeningRoom()
             return False
  
     except requests.RequestException as e:
-        print(f"getOpeningRoomError: {e}")
+        # print(f"getOpeningRoomError: {e}")
+        if "该预约日期暂未开放预约" in str(e):
+            print("稍等，该预约日期暂未开放预约，再次重新订场")
+        else:
+            print(f"getOpeningRoomError: {e}")
+
         getOpeningRoomNumber += 1
         if "该预约日期暂未开放预约" in re.text:
             print("该预约日期暂未开放预约")
             return False   
-        if getOpeningRoomNumber < 3:
-            time.sleep(1.2)
+        if getOpeningRoomNumber < 60:
+            time.sleep(0.95)
             getOpeningRoom()
         return False
     
@@ -556,6 +577,7 @@ def getTimeList():
                 if item['text'] == '可预约':
                     booked_times.append(item['NAME'])
             print(book_day,'可预约时间为',booked_times,'\n')
+            
             
             if booked_times:
 
@@ -579,6 +601,12 @@ def getTimeList():
                     elif "09:00-10:00" in booked_times:
                         booked_times.remove("09:00-10:00")
                         print('移除早上9-10点场地')
+                    elif "10:00-11:00" in booked_times:
+                        booked_times.remove("10:00-11:00")
+                        print('移除早上10-11点场地')
+                    elif "11:00-12:00" in booked_times:
+                        booked_times.remove("11:00-12:00")
+                        print('移除早上11-12点场地')
                     else:
                         book_time = random.choice(booked_times)
 
@@ -594,7 +622,6 @@ def getTimeList():
                 start_time = book_time.split('-')[0]
                 end_time = book_time.split('-')[1]
                 # print('getTimeList',getOpeningRoom_data)
-
                 getOpeningRoom()
                 
             else:
@@ -603,21 +630,19 @@ def getTimeList():
                     print("无剩余开放时间")
 
                 # print("re.text",re.text)
-                if getTimeListNumber < 5:
-                    time.sleep(1.2)
+                if getTimeListNumber < 60:
+                    time.sleep(0.95)
                     
                     # print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
                 return False
                 
         except json.JSONDecodeError:
+            # print("getTimelistError: ", re.text)
             print("getTimelistError: ", re.text)
             getTimeListNumber += 1
-            if "该预约日期暂未开放预约" in re.text:
-                print("该预约日期暂未开放预约")
-                return False   
-            if getTimeListNumber < 5:
-                time.sleep(1.2)
+            if getTimeListNumber < 60:
+                time.sleep(0.95)
                 getTimeList()
             return False
  
@@ -627,8 +652,8 @@ def getTimeList():
         if "该预约日期暂未开放预约" in re.text:
             print("该预约日期暂未开放预约")
             return False   
-        if getTimeListNumber < 5:
-            time.sleep(1.2)
+        if getTimeListNumber < 60:
+            time.sleep(0.95)
             getTimeList()
         return False  
     
@@ -640,7 +665,7 @@ def get_login_cookies(username, password,callback):
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--v=1")
-
+    
     print('等待浏览器启动,勿关闭窗口')
 
     # 启动浏览器
@@ -726,8 +751,12 @@ def get_login_cookies(username, password,callback):
     if success:
         print("成功获取 cookies。")
         callback()  # 获取成功，调用回调函数
+        driver.quit()
     else:
-        print("获取 cookies 失败。")
+        print("获取 cookies 失败。请退出重新获取")
+        driver.quit()
+
+
 
 
 # 特定时间运行
@@ -755,7 +784,7 @@ def runScriptTime(start_time,is_restarted=False):
 
     while remaining_seconds > 0:
         print(f"剩余时间：{remaining_seconds} 秒", end="\r")
-        time.sleep(1)
+        time.sleep(0.95)
         remaining_seconds -= 1
         # 如果剩余时间小于180秒，且未重启，调用get_login_cookies()
         if remaining_seconds < 180 and not is_restarted:
