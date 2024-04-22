@@ -533,8 +533,11 @@ def getOpeningRoom():
                 return False
         
         except json.JSONDecodeError:
-            print("getOpeningRoomError: ", re.text)
-
+            # print("getOpeningRoomError: ", re.text)
+            if "该预约日期暂未开放预约" in str(re.text):
+                print("稍等，该预约日期暂未开放预约，再次重新订场")
+            else:
+                print(f"getOpeningRoomError: ",re.text)
             getOpeningRoomNumber += 1
 
             if getOpeningRoomNumber < 60:
