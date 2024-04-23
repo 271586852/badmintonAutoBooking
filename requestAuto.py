@@ -217,7 +217,7 @@ ttk.Entry(root, textvariable=book_day_var).grid(row=4, column=1)
 
 ttk.Label(root, text="运行时间:").grid(row=5, column=0, sticky=tk.W, padx=7)
 ttk.Entry(root, textvariable=run_time_var).grid(row=5, column=1)
-run_time_var.set("12:30:02")
+run_time_var.set("12:30:01")
 
 # ttk.Label(root, text="学号:").grid(row=6, column=0, sticky=tk.W)
 # ttk.Entry(root, textvariable=YYRGH_var).grid(row=6, column=1)
