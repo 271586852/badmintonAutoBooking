@@ -19,7 +19,7 @@ from selenium.webdriver.common.by import By
 import requests
 import re
 import tkinter.messagebox as messagebox
-
+import  re
 import ntplib
 from datetime import datetime, timedelta, timezone
 # 设置下列参数,然后运行脚本即可
@@ -57,6 +57,16 @@ def get_network_beijing_time_formatted(server='pool.ntp.org'):
         return f"获取网络时间失败，使用本机时间: {e}"
 
 # print(get_network_beijing_time_formatted())
+
+def extract_and_respond(html_content):
+    # Regular expression to extract Chinese characters
+    chinese_text = "".join(re.findall(r'[\u4e00-\u9fff]+', html_content))
+    
+    # Check for the specific message
+    if "该预约日期暂未开放预约" in chinese_text:
+        return "暂未开放预约，重试中"
+    else:
+        return chinese_text
 
 
 # 初始化全局变量
@@ -160,6 +170,8 @@ def show_cookie_tutorial(parent):
     text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
     text.insert(tk.END, "3、运行后会弹出浏览器,不要关闭窗口\n")
     text.insert(tk.END, "4、可以同时打开多个本程序,预约多个场地\n")
+    text.insert(tk.END, "5、报错为正常现象，运行结束才关闭窗口\n")
+
 
 
 
@@ -331,7 +343,7 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.3 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.4 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -527,7 +539,7 @@ def getOpeningRoom():
             else:
                 getOpeningRoomNumber += 1
                 if not available_rooms:
-                    print('无剩余空场')
+                    print('无剩余空场,重试第',getOpeningRoomNumber,'次')
                 # print('re.text',re.text)
                 if getOpeningRoomNumber < 72:
                     time.sleep(0.95)
@@ -537,11 +549,17 @@ def getOpeningRoom():
         
         except json.JSONDecodeError:
             # print("getOpeningRoomError: ", re.text)
-            if "暂未开放预约" in re.text:
-                print("稍等，该预约日期暂未开放预约，再次重新订场")
-            else:
-                print(f"getOpeningRoomError: ",re.text)
+            
+            # chinese_text = "".join(re.findall(r'[\u4e00-\u9fff]+', re.text))
+            # if "暂未开放预约" in chinese_text:
+            #     print("稍等，该预约日期暂未开放预约，再次重新订场")
+            # else:
+            #     print(f"getOpeningRoomError: ",chinese_text)
+
+
             getOpeningRoomNumber += 1
+            print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
+            extract_and_respond(re.text)
 
             if getOpeningRoomNumber < 72:
                 time.sleep(0.95)
@@ -553,12 +571,13 @@ def getOpeningRoom():
         if "暂未开放预约" in e:
             print("稍等，该预约日期暂未开放预约，再次重新订场")
         else:
-            print(f"getOpeningRoomError: {e}")
+            extract_and_respond(e)
+
 
         getOpeningRoomNumber += 1
-        if "该预约日期暂未开放预约" in re.text:
-            print("该预约日期暂未开放预约")
-            return False   
+        print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
+        # extract_and_respond(e)
+
         if getOpeningRoomNumber < 72:
             time.sleep(0.95)
             getOpeningRoom()
@@ -631,7 +650,7 @@ def getTimeList():
             else:
                 getTimeListNumber += 1
                 if not booked_times:
-                    print("无剩余开放时间")
+                    print("无剩余开放时间,重试第",getTimeListNumber,"次")
 
                 # print("re.text",re.text)
                 if getTimeListNumber < 72:
@@ -653,9 +672,6 @@ def getTimeList():
     except requests.RequestException as e:
         print(f"getTimelistError: {e}")
         getTimeListNumber += 1
-        if "该预约日期暂未开放预约" in re.text:
-            print("该预约日期暂未开放预约")
-            return False   
         if getTimeListNumber < 72:
             time.sleep(0.95)
             getTimeList()
