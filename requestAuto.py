@@ -823,7 +823,7 @@ def startRun():
     getTimeList()
     # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
 
-    print('程序运行结束')
+    print('程序运行结束,时间为',get_network_beijing_time_formatted())
 
     
 # 创建提交按钮
