@@ -36,10 +36,10 @@ from datetime import datetime, timedelta, timezone
 
 
 def get_network_beijing_time_formatted(server='pool.ntp.org'):
+    tryNumber = 0
     try:
         client = ntplib.NTPClient()
         for _ in range(8):
-            tryNumber = 0
             try:
                 response = client.request(server, version=3)
                 utc_time = datetime.fromtimestamp(response.tx_time, timezone.utc)
@@ -506,7 +506,7 @@ def bookRoom(availableRoom):
     except requests.RequestException as e:
         print(f"bookRoomError: {e}")
         bookRoomNumber += 1
-        if bookRoomNumber < 72:
+        if bookRoomNumber < 82:
             time.sleep(0.95)
             bookRoom(availableRoom)
         return False
@@ -541,7 +541,7 @@ def getOpeningRoom():
                 if not available_rooms:
                     print('无剩余空场,重试第',getOpeningRoomNumber,'次')
                 # print('re.text',re.text)
-                if getOpeningRoomNumber < 72:
+                if getOpeningRoomNumber < 82:
                     time.sleep(0.95)
                     # print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
@@ -561,7 +561,7 @@ def getOpeningRoom():
             print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
             extract_and_respond(re.text)
 
-            if getOpeningRoomNumber < 72:
+            if getOpeningRoomNumber < 82:
                 time.sleep(0.95)
                 getOpeningRoom()
             return False
@@ -578,7 +578,7 @@ def getOpeningRoom():
         print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
         # extract_and_respond(e)
 
-        if getOpeningRoomNumber < 72:
+        if getOpeningRoomNumber < 82:
             time.sleep(0.95)
             getOpeningRoom()
         return False
@@ -653,7 +653,7 @@ def getTimeList():
                     print("无剩余开放时间,重试第",getTimeListNumber,"次")
 
                 # print("re.text",re.text)
-                if getTimeListNumber < 72:
+                if getTimeListNumber < 82:
                     time.sleep(0.95)
                     
                     # print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
@@ -664,7 +664,7 @@ def getTimeList():
             # print("getTimelistError: ", re.text)
             print("getTimelistError: ", re.text)
             getTimeListNumber += 1
-            if getTimeListNumber < 72:
+            if getTimeListNumber < 82:
                 time.sleep(0.95)
                 getTimeList()
             return False
@@ -672,7 +672,7 @@ def getTimeList():
     except requests.RequestException as e:
         print(f"getTimelistError: {e}")
         getTimeListNumber += 1
-        if getTimeListNumber < 72:
+        if getTimeListNumber < 82:
             time.sleep(0.95)
             getTimeList()
         return False  
@@ -799,7 +799,7 @@ def runScriptTime(start_time,is_restarted=False):
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
     current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
-    remaining_seconds = start_time_seconds - current_time_seconds
+    remaining_seconds = start_time_seconds - current_time_seconds -2
     
     print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
 
@@ -813,12 +813,15 @@ def runScriptTime(start_time,is_restarted=False):
             print(f"剩余时间小于180秒，重新开始计时。")
             runScriptTime(start_time, is_restarted=True)
     
-    print("开始运行程序！", get_network_beijing_time_formatted(), '\n')
+    # print("开始运行程序！", get_network_beijing_time_formatted(), '\n')
 
 
 
 def startRun():
     print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
+
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print("本机时间为:", current_time)
 
     getTimeList()
     # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)

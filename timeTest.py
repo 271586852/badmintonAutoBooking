@@ -34,6 +34,8 @@ import ntplib
 from datetime import datetime, timedelta, timezone
 
 def get_network_beijing_time_formatted(server='pool.ntp.org'):
+    current_time = datetime.now().strftime("%H:%M:%S")
+    print("Current Local Time:", current_time)
     try:
         client = ntplib.NTPClient()
         tryNumber = 0
