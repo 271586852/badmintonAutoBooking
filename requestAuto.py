@@ -22,6 +22,7 @@ import tkinter.messagebox as messagebox
 import  re
 import ntplib
 from datetime import datetime, timedelta, timezone
+import random
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
 # 1 cookies参数 cookie_str自行从浏览器中获取 
@@ -39,7 +40,7 @@ def get_network_beijing_time_formatted(server='pool.ntp.org'):
     tryNumber = 0
     try:
         client = ntplib.NTPClient()
-        for _ in range(8):
+        for _ in range(7):
             try:
                 response = client.request(server, version=3)
                 utc_time = datetime.fromtimestamp(response.tx_time, timezone.utc)
@@ -87,6 +88,11 @@ getTimeList_data = {}
 getOpeningRoom_data = {}
 headers = {}
 checkTime = False
+
+def reTryTime():
+    return round(random.uniform(0.95, 1.3), 1)
+
+
 
 
 book_time = "19:00-20:00"
@@ -506,8 +512,8 @@ def bookRoom(availableRoom):
     except requests.RequestException as e:
         print(f"bookRoomError: {e}")
         bookRoomNumber += 1
-        if bookRoomNumber < 82:
-            time.sleep(0.95)
+        if bookRoomNumber < 555:
+            time.sleep(reTryTime())
             bookRoom(availableRoom)
         return False
     print('bookRoom调用结束')
@@ -541,8 +547,8 @@ def getOpeningRoom():
                 if not available_rooms:
                     print('无剩余空场,重试第',getOpeningRoomNumber,'次')
                 # print('re.text',re.text)
-                if getOpeningRoomNumber < 82:
-                    time.sleep(0.95)
+                if getOpeningRoomNumber < 555:
+                    time.sleep(reTryTime())
                     # print('调用getOpeningRoomNumber第',getOpeningRoomNumber,'次',book_day,"没有空场了")
                     getOpeningRoom()
                 return False
@@ -561,8 +567,8 @@ def getOpeningRoom():
             print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
             extract_and_respond(re.text)
 
-            if getOpeningRoomNumber < 82:
-                time.sleep(0.95)
+            if getOpeningRoomNumber < 555:
+                time.sleep(reTryTime())
                 getOpeningRoom()
             return False
  
@@ -578,8 +584,8 @@ def getOpeningRoom():
         print(f"getOpeningRoomError: 重试第{getOpeningRoomNumber}次")
         # extract_and_respond(e)
 
-        if getOpeningRoomNumber < 82:
-            time.sleep(0.95)
+        if getOpeningRoomNumber < 555:
+            time.sleep(reTryTime())
             getOpeningRoom()
         return False
     
@@ -587,7 +593,7 @@ def getOpeningRoom():
 
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber,YYRGH,YYRXM,LXFS
-
+    print('reTryTime为',reTryTime())
     # print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
@@ -653,8 +659,8 @@ def getTimeList():
                     print("无剩余开放时间,重试第",getTimeListNumber,"次")
 
                 # print("re.text",re.text)
-                if getTimeListNumber < 82:
-                    time.sleep(0.95)
+                if getTimeListNumber < 555:
+                    time.sleep(reTryTime())
                     
                     # print('调用第',getTimeListNumber,'次',book_day,"没有空场了")
                     getTimeList()
@@ -664,16 +670,16 @@ def getTimeList():
             # print("getTimelistError: ", re.text)
             print("getTimelistError: ", re.text)
             getTimeListNumber += 1
-            if getTimeListNumber < 82:
-                time.sleep(0.95)
+            if getTimeListNumber < 555:
+                time.sleep(reTryTime())
                 getTimeList()
             return False
  
     except requests.RequestException as e:
         print(f"getTimelistError: {e}")
         getTimeListNumber += 1
-        if getTimeListNumber < 82:
-            time.sleep(0.95)
+        if getTimeListNumber < 555:
+            time.sleep(reTryTime())
             getTimeList()
         return False  
     
@@ -800,6 +806,10 @@ def runScriptTime(start_time,is_restarted=False):
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
     current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
     remaining_seconds = start_time_seconds - current_time_seconds -2
+
+    current_time_datetime = datetime.strptime(current_time, "%H:%M:%S")
+    estimated_start_time = (current_time_datetime + timedelta(seconds=remaining_seconds)).strftime("%H:%M:%S")
+    print(f"预计启动时间：{estimated_start_time}")
     
     print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
 
