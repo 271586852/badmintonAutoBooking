@@ -172,7 +172,7 @@ def show_cookie_tutorial(parent):
     text.pack()
 
     # 显示文本内容
-    text.insert(tk.END, "1、最好当天抢场前一个小时内运行本脚本\n")
+    text.insert(tk.END, "1、最好在抢场前一个小时内运行本脚本\n")
     text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
     text.insert(tk.END, "3、运行后会弹出浏览器,不要关闭窗口\n")
     text.insert(tk.END, "4、可以同时打开多个本程序,预约多个场地\n")
@@ -349,7 +349,7 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.4 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.5 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -805,7 +805,7 @@ def runScriptTime(start_time,is_restarted=False):
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
     current_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(current_time.split(":"))))
-    remaining_seconds = start_time_seconds - current_time_seconds -2
+    remaining_seconds = start_time_seconds - current_time_seconds -1
 
     current_time_datetime = datetime.strptime(current_time, "%H:%M:%S")
     estimated_start_time = (current_time_datetime + timedelta(seconds=remaining_seconds)).strftime("%H:%M:%S")
