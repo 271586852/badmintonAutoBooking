@@ -33,9 +33,6 @@ import random
 # 6 姓名
 # 7 手机号
 
-
-
-
 def get_network_beijing_time_formatted(server='pool.ntp.org'):
     tryNumber = 0
     try:
@@ -349,7 +346,7 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.5 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.6 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -398,7 +395,7 @@ def submit_action():
         messagebox.showinfo("提示", "时间格式必须为xx:xx-xx:xx")
         return
     
-    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕","邓志钢"]
+    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕","邓志钢","武力"]
     if YYRXM not in authorized_users:
         messagebox.showinfo("提示","用户未经授权，请联系授权")
         return
@@ -698,9 +695,11 @@ def get_login_cookies(username, password,callback):
     driver = webdriver.Chrome()
 
     # 访问要登录的页面
+    # driver.get("https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do#/sportVenue")
+
+
     driver.get("https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do#/sportVenue")
 
-    
 
     # 查找页面的用户名和密码输入框，并输入对应的值
     username_input = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//*[@id='username']")))    
@@ -712,12 +711,12 @@ def get_login_cookies(username, password,callback):
     password_input.send_keys(password)
 
    
-    checkbox_xpath = '//*[@id="casLoginForm"]/p[4]/div'
+    checkbox_xpath = '//*[@id="rememberMe"]'
     checkbox = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
     checkbox.click()
 
     # 查找登录按钮，点击进行登录
-    login_button = driver.find_element(By.XPATH,"//*[@id='casLoginForm']/p[5]/button")
+    login_button = driver.find_element(By.XPATH,"//*[@id='login_submit']")
     login_button.click()
 
     time.sleep(3)

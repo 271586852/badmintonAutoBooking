@@ -284,24 +284,7 @@ def getTimeList():
     
     print('getTimeList调用结束')
 
-def get_login_cookies(username, password, login_url):
-    session = requests.Session()
 
-    # 这是登录表单的数据
-    login_data = {
-        'username': username,
-        'password': password,
-    }
-
-
-    # 发送 POST 请求到登录 URL，带上登录表单的数据
-    response = session.post(login_url, data=login_data)
-
-    response.raise_for_status()
-
-    print(response.text,response.content,session.cookies)
-
-    return session.cookies
 
 # 特定时间运行
 def runScriptTime(start_time):
@@ -340,8 +323,6 @@ if __name__ == "__main__":
     # print(cookies,'\n')
     # print(book_timeKS,book_timeJS,'\n')
 
-    # 自动获取用户cookie，日后完善
-    # get_login_cookies(username, password, login_url)
 
     # 设定运行时间，测试时可注释掉，可即刻运行
     # runScriptTime(run_time)
