@@ -35,9 +35,10 @@ import random
 
 def get_network_beijing_time_formatted(server='pool.ntp.org'):
     tryNumber = 0
+    print("尝试连接ntp服务器获取网络时间，若六次均失败则使用本机时间")
     try:
         client = ntplib.NTPClient()
-        for _ in range(7):
+        for _ in range(6):
             try:
                 response = client.request(server, version=3)
                 utc_time = datetime.fromtimestamp(response.tx_time, timezone.utc)
@@ -346,7 +347,7 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.6 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.7 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -518,6 +519,7 @@ def bookRoom(availableRoom):
 def getOpeningRoom():
     global available_rooms,getOpeningRoomNumber
     # print('getOpeningRoom',getOpeningRoom_data)
+    print('抢场开始，场地可能延迟开放')
     try:
         re = requests.post(urlGetOpeningRoom, data=getOpeningRoom_data, headers=headers, cookies=cookies)
         re.raise_for_status()
@@ -542,7 +544,7 @@ def getOpeningRoom():
             else:
                 getOpeningRoomNumber += 1
                 if not available_rooms:
-                    print('无剩余空场,重试第',getOpeningRoomNumber,'次')
+                    print('暂无空场,重试第',getOpeningRoomNumber,'次')
                 # print('re.text',re.text)
                 if getOpeningRoomNumber < 555:
                     time.sleep(reTryTime())
@@ -590,7 +592,7 @@ def getOpeningRoom():
 
 def getTimeList():
     global book_time, start_time, end_time, booked_times,getOpeningRoom_data,book_timeKS,book_timeJS,getTimeListNumber,YYRGH,YYRXM,LXFS
-    print('reTryTime为',reTryTime())
+    # print('reTryTime为',reTryTime())
     # print('打印信息',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
     try:
         re = requests.post(urlGetTimeList, data=getTimeList_data, headers=headers, cookies=cookies)
@@ -697,20 +699,19 @@ def get_login_cookies(username, password,callback):
     # 访问要登录的页面
     # driver.get("https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do#/sportVenue")
 
-
     driver.get("https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/index.do#/sportVenue")
 
 
     # 查找页面的用户名和密码输入框，并输入对应的值
-    username_input = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH, "//*[@id='username']")))    
-    username_input.clear()
+    username_input = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='username']")))    
     username_input.send_keys(username)
 
-    password_input = driver.find_element(By.XPATH,"//*[@id='password']")
-    password_input.clear()
+    time.sleep(2)
+    password_input = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='password']")))    
+
+    # password_input = driver.find_element(By.XPATH,"//*[@id='password']")
     password_input.send_keys(password)
 
-   
     checkbox_xpath = '//*[@id="rememberMe"]'
     checkbox = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, checkbox_xpath)))
     checkbox.click()
@@ -722,7 +723,7 @@ def get_login_cookies(username, password,callback):
     time.sleep(3)
 
     # 等待[@id="sportVenue"]/div[1]/div/div[1]出现
-    area_button = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[1]/div/div[1]')))
+    area_button = WebDriverWait(driver, 15).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="sportVenue"]/div[1]/div/div[1]')))
     area_button.click()
 
     badminton_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="sportVenue"]/div[2]/div[2]/div[2]/div[1]/div/div[1]/div/img')))
