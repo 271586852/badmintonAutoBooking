@@ -34,6 +34,9 @@ import random
 # 7 手机号
 
 def get_network_beijing_time_formatted(server='pool.ntp.org'):
+    if not useNetTime:
+        beijing_time = datetime.now(pytz.timezone('Asia/Shanghai'))
+        return beijing_time.strftime('%H:%M:%S')
     tryNumber = 0
     print("尝试连接ntp服务器获取网络时间，若六次均失败则使用本机时间")
     try:
@@ -55,7 +58,6 @@ def get_network_beijing_time_formatted(server='pool.ntp.org'):
     except Exception as e:
         return f"获取网络时间失败，使用本机时间: {e}"
 
-# print(get_network_beijing_time_formatted())
 
 def extract_and_respond(html_content):
     # Regular expression to extract Chinese characters
@@ -69,7 +71,7 @@ def extract_and_respond(html_content):
 
 
 # 初始化全局变量
-# current_time = get_network_beijing_time_formatted()
+useNetTime = False
 available_rooms = []
 cookie_str = ''
 remaining_seconds = 0
@@ -148,10 +150,13 @@ YYRGH_var = tk.StringVar()
 YYRXM_var = tk.StringVar()
 LXFS_var = tk.StringVar()
 run_script_var = tk.BooleanVar()
+useNetTime_var = tk.BooleanVar()
 
 # 创建按钮
 tutorial_button = ttk.Button(root, text="订场教程", command=lambda: show_cookie_tutorial(root))
 tutorial_button.grid(row=0, column=0, columnspan=2, pady=2)
+
+
 
 
 # poem_button = ttk.Button(root, text="切换诗词", command=change_poem)
@@ -237,6 +242,11 @@ LXFS_var.set("")
 
 ttk.Checkbutton(root, text="定时运行", variable=run_script_var).grid(row=9, column=0, sticky=tk.W, padx=7)
 run_script_var.set(True)
+
+use_net_time_checkbox = ttk.Checkbutton(root, text="是否使用网络时间", variable=useNetTime_var)
+use_net_time_checkbox.grid(row=9, column=1, sticky=tk.W, padx=7)
+useNetTime_var.set(False)
+
 
 poems = [
     "此身原本不知愁,最怕万一见温柔",
@@ -430,7 +440,6 @@ def submit_action():
     # 输出以确认
     print(f"预定日期：{book_day}, 预定时间：{book_timeKS}")
     # 根据用户选择执行
-    # print('run_script_var',run_script_var.get())
     root.withdraw()
     if run_script_var.get():
         get_login_cookies(username, password,print_callback)
@@ -487,7 +496,7 @@ def bookRoom(availableRoom):
 
         try:
             re_data = json.loads(re.text)
-            print(re_data,'预约成功，场地时间为',book_day,book_time,'抢场时间',get_network_beijing_time_formatted(),'\n')
+            print(re_data,'预约成功，场地时间为',book_day,book_time,'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
             if "您来迟了" in re.text:
@@ -800,7 +809,7 @@ def runScriptTime(start_time,is_restarted=False):
     print("当前时间：", current_time)
 
     if current_time >= start_time:
-        print("已经过了指定的开始时间。",get_network_beijing_time_formatted())
+        print("已经过了指定的开始时间。")
         return
     
     start_time_seconds = sum(int(x) * 60 ** i for i, x in enumerate(reversed(start_time.split(":"))))
@@ -823,7 +832,6 @@ def runScriptTime(start_time,is_restarted=False):
             print(f"剩余时间小于180秒，重新开始计时。")
             runScriptTime(start_time, is_restarted=True)
     
-    # print("开始运行程序！", get_network_beijing_time_formatted(), '\n')
 
 
 
@@ -836,7 +844,7 @@ def startRun():
     getTimeList()
     # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
 
-    print('程序运行结束,时间为',get_network_beijing_time_formatted())
+    print('程序运行结束,时间为')
 
     
 # 创建提交按钮
