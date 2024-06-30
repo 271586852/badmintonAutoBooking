@@ -80,6 +80,7 @@ getTimeListNumber = 0
 getOpeningRoomNumber = 0
 bookRoomNumber = 0
 cookies = {}
+noneVenusTime = []
 start_time = ''
 end_time = ''
 book_timeKS = ''
@@ -175,11 +176,12 @@ def show_cookie_tutorial(parent):
     text.pack()
 
     # 显示文本内容
-    text.insert(tk.END, "1、最好在抢场前一个小时内运行本脚本\n")
+    text.insert(tk.END, "1、在抢场前半个小时内运行本脚本\n")
     text.insert(tk.END, "2、若需要定时执行，则勾选设定运行时间；若需要立即运行，则取消勾选设定运行时间\n")
     text.insert(tk.END, "3、运行后会弹出浏览器,不要关闭窗口\n")
-    text.insert(tk.END, "4、可以同时打开多个本程序,预约多个场地\n")
-    text.insert(tk.END, "5、报错为正常现象，运行结束才关闭窗口\n")
+    text.insert(tk.END, "4、可以同时打开多个本程序,预约多个场地，一个账号最多约两个场\n")
+    text.insert(tk.END, "5、若本机时间正确，无需勾选使用网络时间；反之\n")
+
 
 
 
@@ -357,7 +359,7 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.7 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.75 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -455,7 +457,7 @@ def print_callback():
 
 
 def bookRoom(availableRoom):
-    global available_rooms,bookRoomNumber
+    global available_rooms,bookRoomNumber,noneVenusTime
     # print('bookRoom函数',available_rooms)
     if "15093a7663fa498695608f3d52cca59d" in availableRoom:
         Room = "15093a7663fa498695608f3d52cca59d"
@@ -499,14 +501,19 @@ def bookRoom(availableRoom):
             print(re_data,'预约成功，场地时间为',book_day,book_time,'\n')
         except json.JSONDecodeError:
             # print("无效的 JSON 数据: ", re.text)
-            if "您来迟了" in re.text:
-                print("您来迟了")
+            # if "您来迟了" in re.text:
+            if "成功" not in re.text:
+                if "该场地已被关闭，请选择其他场地或时间段" in re.text:
+                    print("该场地已被关闭，请选择其他场地或时间段")
+                if "来迟了" in re.text:
+                    print("您来迟了")
                 availableRoom.remove(Room)
-                print("移除后的",len(available_rooms))
+                print("移除后的",available_rooms)
                 if availableRoom:
                     bookRoom(availableRoom)
                 else:
                     print(book_day,book_time,re.text)
+                    noneVenusTime.append(book_time)
                     getTimeList()
                     return False
                 
@@ -553,7 +560,7 @@ def getOpeningRoom():
             else:
                 getOpeningRoomNumber += 1
                 if not available_rooms:
-                    print('暂无空场,重试第',getOpeningRoomNumber,'次')
+                    print('暂无空场,重试第',getOpeningRoomNumber,'次','\n')
                 # print('re.text',re.text)
                 if getOpeningRoomNumber < 555:
                     time.sleep(reTryTime())
@@ -613,6 +620,7 @@ def getTimeList():
                 # print(item)
                 if item['text'] == '可预约':
                     booked_times.append(item['NAME'])
+            booked_times = [time for time in booked_times if time not in noneVenusTime]
             print(book_day,'可预约时间为',booked_times,'\n')
             
             
@@ -797,6 +805,9 @@ def get_login_cookies(username, password,callback):
 # 特定时间运行
 def runScriptTime(start_time,is_restarted=False):
     global remaining_seconds
+
+    print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
+
     # 获取当前的北京时间
     # beijing_tz = pytz.timezone('Asia/Shanghai')
     # current_time = datetime.now(beijing_tz).strftime("%H:%M:%S")
@@ -820,7 +831,7 @@ def runScriptTime(start_time,is_restarted=False):
     estimated_start_time = (current_time_datetime + timedelta(seconds=remaining_seconds)).strftime("%H:%M:%S")
     print(f"预计启动时间：{estimated_start_time}")
     
-    print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
+    # print(f"距离 {start_time} 的剩余时间：{remaining_seconds} 秒")
 
     while remaining_seconds > 0:
         print(f"剩余时间：{remaining_seconds} 秒", end="\r")
@@ -836,7 +847,7 @@ def runScriptTime(start_time,is_restarted=False):
 
 
 def startRun():
-    print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
+    # print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("本机时间为:", current_time)
