@@ -23,6 +23,8 @@ import  re
 import ntplib
 from datetime import datetime, timedelta, timezone
 import random
+import pyperclip
+
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
 # 1 cookies参数 cookie_str自行从浏览器中获取 
@@ -657,13 +659,13 @@ def getTimeList():
 
                 book_timeKS = book_time.split("-")[0]
                 book_timeJS = book_time.split("-")[1]
-                print(book_timeKS,book_timeJS,'\n')
+                # print(book_timeKS,book_timeJS,'\n')
 
                 # book_timeKS修改后，还需要对getOpeningRoom_data中的book_timeKS进行修改
                 getOpeningRoom_data["KSSJ"] = book_timeKS
                 getOpeningRoom_data["JSSJ"] = book_timeJS
 
-                print('修改后的',book_time)
+                print('预约时间',book_time)
                 start_time = book_time.split('-')[0]
                 end_time = book_time.split('-')[1]
                 # print('getTimeList',getOpeningRoom_data)
@@ -844,18 +846,51 @@ def runScriptTime(start_time,is_restarted=False):
             runScriptTime(start_time, is_restarted=True)
     
 
+# 当前应用版本
+CURRENT_VERSION = "1.75.0"
+
+# 更新检查 URL
+UPDATE_URL = "https://example.com/update_info.json"
+
+def copy_to_clipboard(url):
+    pyperclip.copy(url)
+    messagebox.showinfo("复制到剪贴板", "下载链接已复制到剪贴板。")
+
+def check_for_updates():
+    try:
+        response = requests.get(UPDATE_URL)
+        response.raise_for_status()
+        update_info = response.json()
+        latest_version = update_info["version"]
+        download_url = update_info["download_url"]
+
+        if latest_version > CURRENT_VERSION:
+            print(f"发现新版本: {latest_version}，当前版本: {CURRENT_VERSION}")
+            root = tk.Tk()
+            root.withdraw()  # 隐藏主窗口
+            update_confirmation = messagebox.askyesno("发现新版本", f"发现新版本：{latest_version}\n当前版本：{CURRENT_VERSION}\n是否复制下载链接到剪贴板？")
+            if update_confirmation:
+                copy_to_clipboard(download_url)
+            else:
+                messagebox.showinfo("更新已取消", "用户取消了更新。")
+        else:
+            print("当前已是最新版本。")
+    except Exception as e:
+        print(f"检查更新时出错: {e}")
 
 
 def startRun():
     # print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
 
+    check_for_updates()
+    
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("本机时间为:", current_time)
 
     getTimeList()
     # print('打印信息Get后',cookies,book_time,book_day,run_time,YYRGH,YYRXM,LXFS)
 
-    print('程序运行结束,时间为')
+    print('程序运行结束,时间为', current_time)
 
     
 # 创建提交按钮

@@ -1,0 +1,6 @@
+{
+    "version": "1.75.0",
+    "download_url": "https://example.com/downloads/app_v2.0.0.zip",
+    "release_notes": "https://example.com/release_notes_v2.0.0.html",
+    "checksum": "sha256:abcd1234..."
+}
