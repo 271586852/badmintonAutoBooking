@@ -81,7 +81,7 @@ def copy_to_clipboard(url):
 def check_for_updates():
 
     # 当前应用版本
-    CURRENT_VERSION = "1.75.0"
+    CURRENT_VERSION = "1.8.0"
 
     # 更新检查 URL
     UPDATE_URL = "https://pan.baidu.com/s/15qoGK0J_1IXA2YmDKLRafA?pwd=6666"
@@ -425,14 +425,14 @@ def change_poem():
 poem_button = ttk.Button(root, text="再来一句", command=change_poem, width=8)
 poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
-ttk.Label(root, text="version1.75 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
+ttk.Label(root, text="version1.8 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
 
 def show_link():
     link = "https://pan.baidu.com/s/15qoGK0J_1IXA2YmDKLRafA?pwd=6666"
     webbrowser.open(link)
 
-link_label = ttk.Label(root, text="检查更新", foreground="blue", cursor="hand2")
+link_label = ttk.Label(root, text="检查更新", anchor="center",foreground="blue", cursor="hand2")
 link_label.grid(row=14, column=0, columnspan=3)
 link_label.bind("<Button-1>", lambda e: show_link())
 
