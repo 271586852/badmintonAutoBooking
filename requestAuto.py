@@ -24,6 +24,7 @@ import ntplib
 from datetime import datetime, timedelta, timezone
 import random
 import pyperclip
+import webbrowser
 
 # 设置下列参数,然后运行脚本即可
 # 必须设置的参数如下
@@ -70,6 +71,64 @@ def extract_and_respond(html_content):
         return "暂未开放预约，重试中"
     else:
         return chinese_text
+
+
+
+def copy_to_clipboard(url):
+    pyperclip.copy(url)
+    messagebox.showinfo("复制到剪贴板", "下载链接已复制到剪贴板。")
+
+def check_for_updates():
+
+    # 当前应用版本
+    CURRENT_VERSION = "1.75.0"
+
+    # 更新检查 URL
+    UPDATE_URL = "https://pan.baidu.com/s/15qoGK0J_1IXA2YmDKLRafA?pwd=6666"
+
+    chrome_options = Options()
+    chrome_options.add_argument("--enable-logging")
+    chrome_options.add_argument("--v=1")
+    chrome_options.add_argument("--headless")
+
+
+    try:
+        # 启动浏览器
+        driver = webdriver.Chrome()
+
+        driver.get(UPDATE_URL)
+
+        submit_button = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='submitBtn']")))
+        submit_button.click()
+
+        # 获取页面中的数字
+        WebVersion = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='shareqr']/div[2]/div[3]/div/div/dd/div[2]")))
+        latest_version = WebVersion.text
+        # 打印数字
+        print(f"The number is: {latest_version}")
+
+        driver.quit()
+
+        if latest_version > CURRENT_VERSION:
+            print(f"发现新版本: {latest_version}，当前版本: {CURRENT_VERSION}")
+            root = tk.Tk()
+            root.withdraw()  # 隐藏主窗口
+            update_confirmation = messagebox.askyesno("发现新版本", f"发现新版本：{latest_version}\n当前版本：{CURRENT_VERSION}\n是否复制下载链接到剪贴板？")
+            if update_confirmation:
+                copy_to_clipboard(UPDATE_URL)
+            else:
+                messagebox.showinfo("更新已取消", "用户取消了更新。")
+        else:
+            print("当前已是最新版本。")
+    except Exception as e:
+        print(f"检查更新时出错: {e}")
+
+    # Check if there is a running instance of webdriver.Chrome() and close it if exists
+    try:
+        driver.quit()
+    except:
+        pass
+
 
 
 # 初始化全局变量
@@ -137,6 +196,11 @@ urlGetOpeningRoom = 'https://ehall.szu.edu.cn/qljfwapp/sys/lwSzuCgyy/modules/spo
 headers = { "Accept": accept, "User-Agent": user_agent, "Referer": referer ,'Cache-Control': 'no-cache'}
 
 # ------------------------------
+
+# print("检查更新...")
+# check_for_updates()
+# print("更新检查完毕。")
+
 
 # 创建窗口
 root = tk.Tk()
@@ -363,6 +427,15 @@ poem_button.grid(row=12, column=0, columnspan=2,  pady = 5)
 
 ttk.Label(root, text="version1.75 coding by @ ", anchor="center").grid(row=13, column=0,columnspan=2)
 
+
+def show_link():
+    link = "https://pan.baidu.com/s/15qoGK0J_1IXA2YmDKLRafA?pwd=6666"
+    webbrowser.open(link)
+
+link_label = ttk.Label(root, text="检查更新", foreground="blue", cursor="hand2")
+link_label.grid(row=14, column=0, columnspan=3)
+link_label.bind("<Button-1>", lambda e: show_link())
+
 # 定义窗口关闭事件
 root.protocol("WM_DELETE_WINDOW", root.quit)
 
@@ -410,7 +483,7 @@ def submit_action():
         messagebox.showinfo("提示", "时间格式必须为xx:xx-xx:xx")
         return
     
-    authorized_users = ["顾仁杰", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "夏禹", "阚思琪", "王智灵", "邓莉莉","徐沛昕","邓志钢","武力"]
+    authorized_users = ["顾仁杰", "夏禹", "黄冰洁", "李厚池", "郑嘉宜", "林绮婷", "袁之彬", "张李希", "李灿鹏", "阚思琪", "王智灵", "邓莉莉","徐沛昕","邓志钢","武力"]
     if YYRXM not in authorized_users:
         messagebox.showinfo("提示","用户未经授权，请联系授权")
         return
@@ -846,43 +919,12 @@ def runScriptTime(start_time,is_restarted=False):
             runScriptTime(start_time, is_restarted=True)
     
 
-# 当前应用版本
-CURRENT_VERSION = "1.75.0"
 
-# 更新检查 URL
-UPDATE_URL = "https://example.com/update_info.json"
-
-def copy_to_clipboard(url):
-    pyperclip.copy(url)
-    messagebox.showinfo("复制到剪贴板", "下载链接已复制到剪贴板。")
-
-def check_for_updates():
-    try:
-        response = requests.get(UPDATE_URL)
-        response.raise_for_status()
-        update_info = response.json()
-        latest_version = update_info["version"]
-        download_url = update_info["download_url"]
-
-        if latest_version > CURRENT_VERSION:
-            print(f"发现新版本: {latest_version}，当前版本: {CURRENT_VERSION}")
-            root = tk.Tk()
-            root.withdraw()  # 隐藏主窗口
-            update_confirmation = messagebox.askyesno("发现新版本", f"发现新版本：{latest_version}\n当前版本：{CURRENT_VERSION}\n是否复制下载链接到剪贴板？")
-            if update_confirmation:
-                copy_to_clipboard(download_url)
-            else:
-                messagebox.showinfo("更新已取消", "用户取消了更新。")
-        else:
-            print("当前已是最新版本。")
-    except Exception as e:
-        print(f"检查更新时出错: {e}")
 
 
 def startRun():
     # print('打印信息','\n','cookies：',cookies,'\n','预约时间：',book_time,'\n','预约日期：',book_day,'\n','运行时间',run_time,'\n','学号',YYRGH,'\n','姓名',YYRXM,'\n','预约电话',LXFS)
 
-    check_for_updates()
     
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print("本机时间为:", current_time)
